@@ -1,5 +1,5 @@
 ﻿using ConcordiaLib.Abstract;
-using ConcordiaLib.Domain;
+using ConcordiaLib.Collections;
 using ConcordiaMerger;
 using ConcordiaSqlDatabase.Data;
 using ConcordiaTrelloClient;
@@ -47,7 +47,10 @@ public static class Orchestrator
 
             await db.UpdateData(result);
         }
-        
+
+        //Put data to API
+        await trelloClient.PutDataToApiAsync(result);
+
     }
 
 }

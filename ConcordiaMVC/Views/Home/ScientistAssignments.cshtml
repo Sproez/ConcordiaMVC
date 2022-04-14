@@ -5,8 +5,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">@ViewData["Title"]</h1>
-    <h1 class="display-4">@Model.Scientist.Name</h1>
+    <h1 class="display-4">@ViewData["Title"]</h1><br/><br/>
+    <h1 class="displayScientist">@Model.Scientist.Name</h1>
     <ul class="list-group list-group-flush align-items-center">
         @foreach (var card in Model.Cards)
         {

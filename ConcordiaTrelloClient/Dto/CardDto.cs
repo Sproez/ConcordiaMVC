@@ -7,9 +7,9 @@ using System.Text.Json.Serialization;
 
 public class CardDto
 {
-    private static readonly string HighPriorityLabelId = "625032fb182ca5704dde89f7";
-    private static readonly string MediumPriorityLabelId = "62503330156b3d273dbf4bf7";
-    private static readonly string LowPriorityLabelId = "625033198048561b7029c770";
+    //private static readonly string HighPriorityLabelId = "625032fb182ca5704dde89f7";
+    //private static readonly string MediumPriorityLabelId = "62503330156b3d273dbf4bf7";
+    //private static readonly string LowPriorityLabelId = "625033198048561b7029c770";
 
     [JsonPropertyName("id")]
     public string Id { get; init; } = null!;
@@ -28,7 +28,7 @@ public class CardDto
 
     [JsonPropertyName("idLabels")]
     public List<string> LabelIds { get; set; } = null!;
-
+    /*
     public Priority Priority
     {
         get {
@@ -38,6 +38,7 @@ public class CardDto
             return Priority.Default;
         }
     }
+    */
 
 
 }

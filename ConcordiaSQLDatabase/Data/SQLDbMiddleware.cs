@@ -1,6 +1,7 @@
 ﻿namespace ConcordiaSqlDatabase.Data;
 
 using Microsoft.EntityFrameworkCore;
+using ConcordiaLib.Collections;
 using ConcordiaLib.Domain;
 using ConcordiaLib.Abstract;
 
@@ -54,52 +55,43 @@ public class SQLDbMiddleware : IDbMiddleware
         return new DatabaseImage(cards, people, comments, assignments, cardLists);
     }
 
-    public async Task UpdateData((DatabaseImage created, DatabaseImage updated, DatabaseImage deleted) tuple)
+    public async Task UpdateData(MergingResults merge)
     {
+        var cards = merge.Cards.Local;
+        var assignments = merge.Assignments.Local;
+        var comments = merge.Comments.Local;
+        var cardLists = merge.CardLists.Local;
+        var people = merge.People.Local;
+
         //Card lists
-        _context.CardLists.RemoveRange(tuple.deleted.CardLists);
-        _context.CardLists.UpdateRange(tuple.updated.CardLists);
-        await _context.CardLists.AddRangeAsync(tuple.created.CardLists);
+        await _context.CardLists.AddRangeAsync(cardLists.Created);
+        _context.CardLists.UpdateRange(cardLists.Updated);
+        _context.CardLists.RemoveRange(cardLists.Deleted);
 
         //People
-        await _context.People.AddRangeAsync(tuple.created.People);
-        _context.People.UpdateRange(tuple.updated.People);
-        _context.People.RemoveRange(tuple.deleted.People);
+        await _context.People.AddRangeAsync(people.Created);
+        _context.People.UpdateRange(people.Updated);
+        _context.People.RemoveRange(people.Deleted);
 
         //Cards
-        await _context.Cards.AddRangeAsync(tuple.created.Cards);
-        _context.Cards.UpdateRange(tuple.updated.Cards);
-        _context.Cards.RemoveRange(tuple.deleted.Cards);
+        await _context.Cards.AddRangeAsync(cards.Created);
+        _context.Cards.UpdateRange(cards.Updated);
+        _context.Cards.RemoveRange(cards.Deleted);
 
         //Assignments
-        await _context.Assignments.AddRangeAsync(tuple.created.Assignments);
-        _context.Assignments.UpdateRange(tuple.updated.Assignments);
-        _context.Assignments.RemoveRange(tuple.deleted.Assignments);
+        await _context.Assignments.AddRangeAsync(assignments.Created);
+        _context.Assignments.UpdateRange(assignments.Updated);
+        _context.Assignments.RemoveRange(assignments.Deleted);
 
         //Comments
-        await _context.Comments.AddRangeAsync(tuple.created.Comments);
-        _context.Comments.UpdateRange(tuple.updated.Comments);
-        _context.Comments.RemoveRange(tuple.deleted.Comments);
+        await _context.Comments.AddRangeAsync(comments.Created);
+        _context.Comments.UpdateRange(comments.Updated);
+        _context.Comments.RemoveRange(comments.Deleted);
 
         await _context.SaveChangesAsync();
     }
+}
 
-    public async Task TEST_OverwriteAll(DatabaseImage img)
-    {
-        //Remove old data
-        _context.Assignments.RemoveRange(_context.Assignments);
-        _context.Comments.RemoveRange(_context.Comments);
-        _context.Cards.RemoveRange(_context.Cards);
-        _context.People.RemoveRange(_context.People);
-        _context.CardLists.RemoveRange(_context.CardLists);
-        await _context.SaveChangesAsync();
-        //Replace with new data from API
-        await _context.CardLists.AddRangeAsync(img.CardLists);
-        await _context.People.AddRangeAsync(img.People);
-        await _context.Cards.AddRangeAsync(img.Cards);
-        await _context.Comments.AddRangeAsync(img.Comments);
-        await _context.Assignments.AddRangeAsync(img.Assignments);
-        await _context.SaveChangesAsync();
-    }
-
+public class MergingResult
+{
 }

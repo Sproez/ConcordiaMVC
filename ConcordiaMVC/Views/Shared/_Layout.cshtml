@@ -9,22 +9,26 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ConcordiaMVC.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="sfondo">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav id="navbar" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-#0E9594 border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Base di ricerca Concordia™</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+	            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+		            <div>Base di ricerca Concordia™</div>
+		            <div class="stupidaggine">Questa non può affondare</div>
+				 </a>
+	            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+	                    aria-expanded="false" aria-label="Toggle navigation">
+		            <div></div>
+		            <span class="navbar-toggler-icon"></span>
+	            </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cards</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ScientistList">Scientists</a>
+                            <a id="scientists" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ScientistList">Scientists</a>
                         </li>
                     </ul>
                 </div>
@@ -37,7 +41,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="backgroundfooter border-top footer text-muted">
         <div class="container">
             &copy; 2022 - Concordia™ - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

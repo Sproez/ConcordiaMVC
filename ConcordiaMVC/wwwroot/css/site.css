@@ -1,22 +1,78 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-.quadrati{
-    width : 80%;
+.myList {
+    margin: auto;
+    align-items:stretch;
+    width: 60%;
+}
+
+.myForm {
+    margin: auto;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.stupidaggine {
+    font-size: 0.5rem !important;
+    margin-left: 50px;
+}
+
+scientists {
+    margin: auto !important;
+}
+
+#SelectedId {
+    width: 100% !important;
+    align-self: center;
+}
+
+#myButton {
+    min-width: 35%;
+}
+
+.myInput {
+    align-self: center;
+}
+
+.form-group {
+    min-width: 35%;
+}
+
+.displayScientist {
+
+    font-size: 1.75rem !important;
+}
+
+.navbar {
+    background-color: #F1E3F3;
+}
+
+.sfondo {
+    background-color: #87BBA2
+}
+
+.list-group-item {
+    background-color: transparent;
+}
+
+.backgroundfooter {
+    background-color: #F1E3F3;
 }

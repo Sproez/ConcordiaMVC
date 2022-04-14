@@ -1,4 +1,5 @@
 ﻿using ConcordiaLib.Domain;
+using ConcordiaLib.Collections;
 
 namespace ConcordiaMerger;
 
@@ -13,7 +14,7 @@ public class Merger
         remoteData = remote;
     }
 
-    public (DatabaseImage created, DatabaseImage updated, DatabaseImage deleted) Merge()
+    public MergingResults Merge()
     {
         var cardListMerge = MergeCardLists();
         var peopleMerge = MergePeople();
@@ -21,18 +22,14 @@ public class Merger
         var commentsMerge = MergeComments();
         var assignmentsMerge = MergeAssignments();
 
-        return (
-            new DatabaseImage(cardsMerge.Item1, peopleMerge.Item1, commentsMerge.Item1, assignmentsMerge.Item1, cardListMerge.Item1),
-            new DatabaseImage(cardsMerge.Item2, peopleMerge.Item2, commentsMerge.Item2, assignmentsMerge.Item2, cardListMerge.Item2),
-            new DatabaseImage(cardsMerge.Item3, peopleMerge.Item3, commentsMerge.Item3, assignmentsMerge.Item3, cardListMerge.Item3)
-            );
+        var result = new MergingResults(cardsMerge, assignmentsMerge, peopleMerge, commentsMerge, cardListMerge);
+
+        return result;
     }
 
-    private (List<CardList>, List<CardList>, List<CardList>) MergeCardLists()
+    private MergeLocalRemote<CardList> MergeCardLists()
     {
-        var created = new List<CardList>();
-        var updated = new List<CardList>();
-        var deleted = new List<CardList>();
+        var m = new MergeLocalRemote<CardList>();
 
         var localDict = localData.CardLists.ToDictionary(i => i.Id);
         var remoteDict = remoteData.CardLists.ToDictionary(i => i.Id);
@@ -42,12 +39,12 @@ public class Merger
             //Creation
             if (!localDict.ContainsKey(kvp.Key))
             {
-                created.Add(kvp.Value);
+                m.Local.Created.Add(kvp.Value);
             }
             else
             {
                 //Updates
-                if (localDict[kvp.Key] != kvp.Value) updated.Add(kvp.Value);
+                if (localDict[kvp.Key] != kvp.Value) m.Local.Updated.Add(kvp.Value);
             }
         }
         foreach (var kvp in localDict)
@@ -55,18 +52,16 @@ public class Merger
             //Deletions
             if (!remoteDict.ContainsKey(kvp.Key))
             {
-                deleted.Add(kvp.Value);
+                m.Local.Deleted.Add(kvp.Value);
             }
         }
 
-        return (created, updated, deleted);
+        return m;
     }
 
-    private (List<Person>, List<Person>, List<Person>) MergePeople()
+    private MergeLocalRemote<Person> MergePeople()
     {
-        var updated = new List<Person>();
-        var created = new List<Person>();
-        var deleted = new List<Person>();
+        var m = new MergeLocalRemote<Person>();
 
         var localDict = localData.People.ToDictionary(i => i.Id);
         var remoteDict = remoteData.People.ToDictionary(i => i.Id);
@@ -76,12 +71,12 @@ public class Merger
             //Creation
             if (!localDict.ContainsKey(kvp.Key))
             {
-                created.Add(kvp.Value);
+                m.Local.Created.Add(kvp.Value);
             }
             else
             {
                 //Updates
-                if (localDict[kvp.Key] != kvp.Value) updated.Add(kvp.Value);
+                if (localDict[kvp.Key] != kvp.Value) m.Local.Updated.Add(kvp.Value);
             }
         }
         foreach (var kvp in localDict)
@@ -89,18 +84,16 @@ public class Merger
             //Deletions
             if (!remoteDict.ContainsKey(kvp.Key))
             {
-                deleted.Add(kvp.Value);
+                m.Local.Deleted.Add(kvp.Value);
             }
         }
 
-        return (created, updated, deleted);
+        return m;
     }
 
-    private (List<Card>, List<Card>, List<Card>) MergeCards()
+    private MergeLocalRemote<Card> MergeCards()
     {
-        var updated = new List<Card>();
-        var created = new List<Card>();
-        var deleted = new List<Card>();
+        var m = new MergeLocalRemote<Card>();
 
         var localDict = localData.Cards.ToDictionary(i => i.Id);
         var remoteDict = remoteData.Cards.ToDictionary(i => i.Id);
@@ -110,7 +103,7 @@ public class Merger
             //Creation
             if (!localDict.ContainsKey(kvp.Key))
             {
-                created.Add(kvp.Value);
+                m.Local.Created.Add(kvp.Value);
             }
             else
             {
@@ -119,7 +112,7 @@ public class Merger
                 {
                     //TODO
                     //proper updates
-                    updated.Add(kvp.Value);
+                    m.Local.Updated.Add(kvp.Value);
                 }
             }
         }
@@ -128,18 +121,16 @@ public class Merger
             //Deletions
             if (!remoteDict.ContainsKey(kvp.Key))
             {
-                deleted.Add(kvp.Value);
+                m.Local.Deleted.Add(kvp.Value);
             }
         }
 
-        return (created, updated, deleted);
+        return m;
     }
 
-    private (List<Comment>, List<Comment>, List<Comment>) MergeComments()
+    private MergeLocalRemote<Comment> MergeComments()
     {
-        var updated = new List<Comment>();
-        var created = new List<Comment>();
-        var deleted = new List<Comment>();
+        var m = new MergeLocalRemote<Comment>();
 
         var localDict = localData.Comments.ToDictionary(i => i.CardId);
         var remoteDict = remoteData.Comments.ToDictionary(i => i.CardId);
@@ -149,27 +140,31 @@ public class Merger
             //First comment on card, made remotely
             if (!localDict.ContainsKey(kvp.Key))
             {
-                created.Add(kvp.Value);
+                m.Local.Created.Add(kvp.Value);
             }
             else
             {
                 if (localDict[kvp.Key].Id == kvp.Value.Id)
                 {
-                    //Edited comment
-                    if (localDict[kvp.Key] != kvp.Value) updated.Add(kvp.Value);
+                    //Edited comment, keep Trello version
+                    if (localDict[kvp.Key] != kvp.Value) m.Local.Updated.Add(kvp.Value);
                 }
                 else
                 {
                     //Keep newest comment, delete older one
                     if (localDict[kvp.Key].CreatedAt > kvp.Value.CreatedAt)
                     {
-                        created.Add(localDict[kvp.Key]);
-                        deleted.Add(kvp.Value);
+                        //Keep local comment, create it on Trello, delete Trello comment both locallly and on Trello
+                        m.Remote.Created.Add(localDict[kvp.Key]);
+                        m.Local.Deleted.Add(kvp.Value);
+                        m.Remote.Deleted.Add(kvp.Value);
                     }
                     else
                     {
-                        created.Add(kvp.Value);
-                        deleted.Add(localDict[kvp.Key]);
+                        //Keep Trello comment, create it locally, delete local comment both locallly and on Trello
+                        m.Local.Created.Add(kvp.Value);
+                        m.Local.Deleted.Add(localDict[kvp.Key]);
+                        m.Remote.Deleted.Add(localDict[kvp.Key]);
                     }
                 }
             }
@@ -180,19 +175,17 @@ public class Merger
             //First comment on card, made locally
             if (!remoteDict.ContainsKey(kvp.Key))
             {
-                //TODO
                 //Post comment on Trello
-                //created.Add(kvp.Value);
+                m.Remote.Created.Add(kvp.Value);
             }
         }
 
-        return (created, updated, deleted);
+        return m;
     }
 
-    private (List<Assignment>, List<Assignment>, List<Assignment>) MergeAssignments()
+    private MergeLocalRemote<Assignment> MergeAssignments()
     {
-        var created = new List<Assignment>();
-        var deleted = new List<Assignment>();
+        var m = new MergeLocalRemote<Assignment>();
 
         var localDict = localData.Assignments.ToDictionary(i => (i.CardId, i.PersonId));
         var remoteDict = remoteData.Assignments.ToDictionary(i => (i.CardId, i.PersonId));
@@ -202,7 +195,7 @@ public class Merger
             //Creation
             if (!localDict.ContainsKey(kvp.Key))
             {
-                created.Add(kvp.Value);
+                m.Local.Created.Add(kvp.Value);
             }
             //Else assignment already exists, and there is no need to update it
         }
@@ -211,13 +204,11 @@ public class Merger
             //Deletions
             if (!remoteDict.ContainsKey(kvp.Key))
             {
-                deleted.Add(kvp.Value);
+                m.Local.Deleted.Add(kvp.Value);
             }
         }
 
-        //Assignments are never updated
-        var updated = new List<Assignment>();
-        return (created, updated, deleted);
+        return m;
     }
 
 }

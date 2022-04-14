@@ -4,12 +4,12 @@
 	ViewData["Title"] = "House of Cards";
 }
 
-<div class="text-center">
+<div class="text-center align-items-center">
 	<h1 class="display-4">@ViewData["Title"]</h1>
-	<ul class="list-group list-group-flush align-items-stretch">
+	<ul class="list-group list-group-flush myList">
 		@foreach (var card in Model.Cards)
 		{
-			<li class="list-group-item">
+			<li class="list-group-item bg-transparent">
 				<div class="card">
 					<div class="d-flex flex-column card-body">					
 						<h5 class="card-title">@card.Title</h5>

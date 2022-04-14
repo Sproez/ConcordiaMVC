@@ -1,6 +1,7 @@
 ﻿namespace ConcordiaLib.Abstract;
 
 using Domain;
+using Collections;
 
 public interface IDbMiddleware
 {
@@ -14,6 +15,6 @@ public interface IDbMiddleware
 
     Task<List<Card>> GetScientistAssignments(string scientistId);
 
-    Task UpdateData((DatabaseImage created, DatabaseImage updated, DatabaseImage deleted) tuple);
+    Task UpdateData(MergingResults merge);
 }
 

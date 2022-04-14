@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConcordiaLib.Domain;
 
-namespace ConcordiaLib.Domain;
+namespace ConcordiaLib.Collections;
 
 public class DatabaseImage
 {
@@ -13,6 +9,15 @@ public class DatabaseImage
     public List<Person> People { get; init; }
     public List<Comment> Comments { get; init; }
     public List<Assignment> Assignments { get; init; }
+
+    public DatabaseImage()
+    {
+        Cards = new List<Card>();
+        People = new List<Person>();
+        Comments = new List<Comment>();
+        Assignments = new List<Assignment>();
+        CardLists = new List<CardList>();
+    }
 
     public DatabaseImage(
         List<Card> cards,
