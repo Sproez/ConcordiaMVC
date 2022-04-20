@@ -1,0 +1,16 @@
+﻿@model ScientistSelectionModel
+
+@{
+    ViewData["Title"] = "Scientist";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <form class="d-flex flex-column card myForm" asp-action="ScientistList" asp-controller="Home" method="post">
+        <div class="d-flex flex-column form-group" >
+            <label>Select your name</label>
+            @Html.DropDownListFor(x => x.SelectedId, Model.Scientists, null, new { required = "required", @class = "form-control text-center myInput" })     
+        </div>
+        <button id="myButton" type="submit" class="btn btn-sm btn-outline-primary">Show my assignments</button>
+    </form>
+</div>

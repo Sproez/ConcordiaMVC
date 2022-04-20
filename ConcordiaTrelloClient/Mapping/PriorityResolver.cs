@@ -15,7 +15,8 @@ public class PriorityResolver// : IValueResolver<CardDto, Card, Priority>
         _options = options;
     }
 
-    public Priority Resolve(IEnumerable<string> labelIds) {
+    public Priority Resolve(IEnumerable<string> labelIds)
+    {
         if (labelIds.Contains(_options.HighPriorityLabelId)) return Priority.High;
         if (labelIds.Contains(_options.MediumPriorityLabelId)) return Priority.Medium;
         if (labelIds.Contains(_options.LowPriorityLabelId)) return Priority.Low;

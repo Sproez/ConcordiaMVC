@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Dto;
-using Dto.Fake;
+using Dto.NestedProperties;
 using ConcordiaLib.Domain;
 using ConcordiaLib.Abstract;
 using ConcordiaLib.Collections;
@@ -36,7 +36,7 @@ public class ApiClient : IApiClient
         var automapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<CardDto, Card>()
-                .ForCtorParam("Priority", 
+                .ForCtorParam("Priority",
                 opt => opt.MapFrom(src => pResolver.Resolve(src.LabelIds)));
             cfg.CreateMap<CardListDto, CardList>();
             cfg.CreateMap<PersonDto, Person>();
@@ -72,7 +72,7 @@ public class ApiClient : IApiClient
         var listTask = GetThingsAsync<CardList, CardListDto>(apiListsQuery);
         var cardTask = GetThingsAsync<Card, CardDto>(apiCardsQuery);
         var personTask = GetThingsAsync<Person, PersonDto>(apiPeopleQuery);
-        var commentTask = GetCommentsAsync(apiCommentsQuery);
+        var commentTask = GetThingsAsync<Comment, CommentDto>(apiCommentsQuery);
         var assignmentTask = GetAssignmentsAsync(apiAssignmentsQuery);
 
         var listTasks = new List<Task> { listTask, cardTask, personTask, commentTask, assignmentTask };
@@ -80,7 +80,7 @@ public class ApiClient : IApiClient
         var t = Task.WhenAll(listTasks);
         await t;
 
-        awreturn new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
+        return new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
     }
 
     //private async Task<List<CardList>> GetListsAsync()
@@ -101,6 +101,7 @@ public class ApiClient : IApiClient
     //    return await GetThingsAsync<Person, PersonDto>(apiQuery);
     //}
 
+    #region Get methods
     private async Task<List<Tresult>> GetThingsAsync<Tresult, Tdto>(string ApiQuery)
     {
         var result = new List<Tresult>();
@@ -116,12 +117,11 @@ public class ApiClient : IApiClient
     private async Task<List<Comment>> GetCommentsAsync(string query)
     {
         var task = _client.GetStreamAsync(query);
-        var fakes = await JsonSerializer.DeserializeAsync<List<FakeComment>>(await task) ?? new List<FakeComment>();
+        var dtos = await JsonSerializer.DeserializeAsync<List<CommentDto>>(await task) ?? new List<CommentDto>();
         var result = new List<Comment>();
         var temp = new List<Comment>();
-        foreach (var fake in fakes)
+        foreach (var dto in dtos)
         {
-            var dto = new CommentDto(fake);
             temp.Add(_mapper.Map<CommentDto, Comment>(dto));
         }
 
@@ -140,15 +140,15 @@ public class ApiClient : IApiClient
     private async Task<List<Assignment>> GetAssignmentsAsync(string query)
     {
         var task = _client.GetStreamAsync(query);
-        var fakes = await JsonSerializer.DeserializeAsync<List<FakeCard>>(await task) ?? new List<FakeCard>();
+        var cards = await JsonSerializer.DeserializeAsync<List<NestedCard>>(await task) ?? new List<NestedCard>();
         var result = new List<Assignment>();
-        foreach (var fake in fakes)
+        foreach (var card in cards)
         {
-            foreach (var assigneeId in fake.AssigneesIds)
+            foreach (var assigneeId in card.AssigneesIds)
             {
                 var assignment = new Assignment()
                 {
-                    CardId = fake.Id,
+                    CardId = card.Id,
                     PersonId = assigneeId
                 };
                 result.Add(assignment);
@@ -157,10 +157,44 @@ public class ApiClient : IApiClient
 
         return result;
     }
+    #endregion
 
     public async Task PutDataToApiAsync(MergingResults merge)
     {
+        await PutCardListsAsync(merge.CardLists.Remote);
         //await PutCommentsAsync();
+    }
+
+    #region Set methods
+    private async Task PutCardListsAsync(MergeCUD<CardList> data)
+    {
+        //Create
+        foreach (var c in data.Created)
+        {
+            //TODO
+        }
+        //Update
+        foreach (var c in data.Updated)
+        {
+            var apiUpdateQuery = $"{_options.BaseURL}/lists/{c.Id}?name={c.Name}&{ApiAuth}";
+            var response = await _client.PutAsync(apiUpdateQuery, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
+        }
+        //Delete
+        foreach (var c in data.Deleted)
+        {
+            var apiDeleteQuery = $"{_options.BaseURL}/lists/{c.Id}/closed?{ApiAuth}";
+            var response = await _client.PostAsync(apiDeleteQuery, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
+        }
     }
 
     private async Task PutCommentsAsync()
@@ -178,6 +212,7 @@ public class ApiClient : IApiClient
 
         var two = 1 + 1;
     }
+    #endregion
 
 }
 
