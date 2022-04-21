@@ -27,18 +27,32 @@ public static class CommentLogic
         //If the comments have different Id, keep the newest one and delete the other
         if (local.Id != remote.Id)
         {
-            if (local.CreatedAt > remote.CreatedAt) {
+            if (local.CreatedAt > remote.CreatedAt)
+            {
                 merge.Remote.Created.Add(local);
-                merge.Local.Deleted.Add(remote);
                 merge.Remote.Deleted.Add(remote);
-            } else {
+            }
+            else
+            {
                 merge.Local.Created.Add(remote);
                 merge.Local.Deleted.Add(local);
                 merge.Remote.Deleted.Add(local);
             }
         }
-        //If the comments have the same Id, do nothing
-        //TODO consider edited comments
+        //If the comments have the same Id and are different, use the Trello version
+        else if (local != remote)
+        {
+            merge.Local.Updated.Add(remote);
+        }
+
     }
+
+    public static (
+        Action<MergeLocalRemote<Comment>, Comment>,
+        Action<MergeLocalRemote<Comment>, Comment>,
+        Action<MergeLocalRemote<Comment>, Comment, Comment>
+        )
+        GetMergeActions() => (MergeWhenOnlyLocal, MergeWhenOnlyRemote, MergeWhenConflict);
+
 }
 

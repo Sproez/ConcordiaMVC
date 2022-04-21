@@ -83,24 +83,6 @@ public class ApiClient : IApiClient
         return new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
     }
 
-    //private async Task<List<CardList>> GetListsAsync()
-    //{
-    //    var apiQuery = $"{BoardEndpoint}/lists?{ApiAuth}";
-    //    return await GetThingsAsync<CardList, CardListDto>(apiQuery);
-    //}
-
-    //private async Task<List<Card>> GetCardsAsync()
-    //{
-    //    var apiQuery = $"{BoardEndpoint}/cards?{ApiAuth}";
-    //    return await GetThingsAsync<Card, CardDto>(apiQuery);
-    //}
-
-    //private async Task<List<Person>> GetPeopleAsync()
-    //{
-    //    var apiQuery = $"{BoardEndpoint}/members?{ApiAuth}";
-    //    return await GetThingsAsync<Person, PersonDto>(apiQuery);
-    //}
-
     #region Get methods
     private async Task<List<Tresult>> GetThingsAsync<Tresult, Tdto>(string ApiQuery)
     {
@@ -111,29 +93,6 @@ public class ApiClient : IApiClient
         {
             result.Add(_mapper.Map<Tdto, Tresult>(dto));
         }
-        return result;
-    }
-
-    private async Task<List<Comment>> GetCommentsAsync(string query)
-    {
-        var task = _client.GetStreamAsync(query);
-        var dtos = await JsonSerializer.DeserializeAsync<List<CommentDto>>(await task) ?? new List<CommentDto>();
-        var result = new List<Comment>();
-        var temp = new List<Comment>();
-        foreach (var dto in dtos)
-        {
-            temp.Add(_mapper.Map<CommentDto, Comment>(dto));
-        }
-
-        //Only keep the most recent comment for each card
-        ILookup<string, Comment> test = temp.ToLookup(c => c.CardId, c => c);
-        foreach (var commentsInCard in test)
-        {
-            Comment newestComment = commentsInCard.OrderByDescending(c => c.CreatedAt).First();
-            //commentsInCard.Aggregate((Comment newest, Comment next) => next.CreatedAt > newest.CreatedAt ? next : newest);
-            result.Add(newestComment);
-        }
-
         return result;
     }
 
@@ -162,7 +121,7 @@ public class ApiClient : IApiClient
     public async Task PutDataToApiAsync(MergingResults merge)
     {
         await PutCardListsAsync(merge.CardLists.Remote);
-        //await PutCommentsAsync();
+        await PutCommentsAsync(merge.Comments.Remote);
     }
 
     #region Set methods
@@ -197,20 +156,29 @@ public class ApiClient : IApiClient
         }
     }
 
-    private async Task PutCommentsAsync()
+    private async Task PutCommentsAsync(MergeCUD<Comment> data)
     {
-
-        var cardId = "62503467d0ca8631655c48f3";
-        //var commentId = "62559a3ff3e3238ceaecb06d";
-        var newText = "Test 2: the return";
-
-        var apiCreateQuery = $"{_options.BaseURL}/cards/{cardId}/actions/comments?text={newText}&{ApiAuth}";
-        //
-        //var apiUpdateQuery = $"{_options.BaseURL}/cards/{cardId}/actions/{commentId}/comments?text={newText}&{ApiAuth}";
-        var task = _client.PostAsync(apiCreateQuery, null);
-        var test = await task;
-
-        var two = 1 + 1;
+        //Create
+        foreach (var c in data.Created)
+        {
+            //TODO
+        }
+        //Update
+        foreach (var c in data.Updated)
+        {
+            //TODO
+        }
+        //Delete
+        foreach (var c in data.Deleted)
+        {
+            var apiDeleteQuery = $"{_options.BaseURL}/actions/{c.Id}?{ApiAuth}";
+            var response = await _client.DeleteAsync(apiDeleteQuery);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
+        }
     }
     #endregion
 

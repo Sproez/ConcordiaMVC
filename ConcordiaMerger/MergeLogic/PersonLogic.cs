@@ -33,5 +33,13 @@ public static class PersonLogic
         }
         //Do nothing if they are equal (we're already synced)
     }
+
+    public static (
+        Action<MergeLocalRemote<Person>, Person>,
+        Action<MergeLocalRemote<Person>, Person>,
+        Action<MergeLocalRemote<Person>, Person, Person>
+        )
+        GetMergeActions() => (MergeWhenOnlyLocal, MergeWhenOnlyRemote, MergeWhenConflict);
+
 }
 

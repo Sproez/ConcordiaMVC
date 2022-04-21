@@ -55,5 +55,12 @@ public static class CardLogic
         }
         //Do nothing if they are equal (we're already synced)
     }
+
+    public static (
+        Action<MergeLocalRemote<Card>, Card>,
+        Action<MergeLocalRemote<Card>, Card>,
+        Action<MergeLocalRemote<Card>, Card, Card>
+        )
+        GetMergeActions() => (MergeWhenOnlyLocal, MergeWhenOnlyRemote, MergeWhenConflict);
 }
 

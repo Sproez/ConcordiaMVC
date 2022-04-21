@@ -30,5 +30,12 @@ public static class CardListLogic
         }
         //Do nothing if they are equal (we're already synced)
     }
+
+    public static (
+        Action<MergeLocalRemote<CardList>, CardList>,
+        Action<MergeLocalRemote<CardList>, CardList>,
+        Action<MergeLocalRemote<CardList>, CardList, CardList>
+        )
+        GetMergeActions() => (MergeWhenOnlyLocal, MergeWhenOnlyRemote, MergeWhenConflict);
 }
 

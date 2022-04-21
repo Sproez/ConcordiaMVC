@@ -32,5 +32,12 @@ public static class AssignmentLogic
             //TODO logging
         }
     }
+
+    public static (
+        Action<MergeLocalRemote<Assignment>, Assignment>,
+        Action<MergeLocalRemote<Assignment>, Assignment>,
+        Action<MergeLocalRemote<Assignment>, Assignment, Assignment>
+        ) 
+        GetMergeActions() => (MergeWhenOnlyLocal, MergeWhenOnlyRemote, MergeWhenConflict);
 }
 
