@@ -19,7 +19,6 @@ public class ApiClient : IApiClient
     public readonly HttpClient httpClient;
 
     public readonly string BoardEndpoint;
-    public readonly string ApiAuth;
 
     private readonly ApiReader _reader;
     private readonly ApiWriter _writer;

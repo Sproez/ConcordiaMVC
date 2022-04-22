@@ -5,6 +5,7 @@ namespace ConcordiaWebApi.Controllers;
 
 using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Dtos;
 
 [ApiController]
 [Route("[controller]")]
@@ -22,7 +23,7 @@ public class CardController : ControllerBase
     public async Task<IActionResult> GetAllCards()
     {
         var cards = await _dbMiddleware.GetAllCards();
-        var result = cards.OrderByDescending(c => c.Priority);
+        var result = cards.Select(c => new CardDto(c)).OrderByDescending(c => c.Priority);
         return Ok(result);
     }
 
@@ -36,12 +37,12 @@ public class CardController : ControllerBase
 
         try
         {
-            var newComment = new Comment(cDto.Text, DateTime.Now) { CardId = cDto.CardId, PersonId = cDto.PersonId };
+            var newComment = new Comment(cDto.Text, DateTime.UtcNow) { Id = cDto.Id, CardId = cDto.CardId, PersonId = cDto.PersonId };
             await _dbMiddleware.PostComment(newComment);
 
             return Ok();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return Problem(statusCode: StatusCodes.Status500InternalServerError);
         }

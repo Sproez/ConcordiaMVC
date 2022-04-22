@@ -1,0 +1,17 @@
+﻿namespace ConcordiaWebApi.Dtos
+{
+    public record ScientistDto(
+        [Required]
+        string Name,
+        [Required]
+        string Id
+        )
+    {
+
+        public ScientistDto(Scientist s)
+        {
+            Name = s.name;
+            Id = s.id;
+        }
+    }
+}

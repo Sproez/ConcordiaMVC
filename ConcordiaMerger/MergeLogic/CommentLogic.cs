@@ -24,7 +24,7 @@ public static class CommentLogic
 
     public static void MergeWhenConflict(MergeLocalRemote<Comment> merge, Comment local, Comment remote)
     {
-        //If the comments have different Id, keep the newest one and delete the other
+        //If the comments have different Id, keep the most recent and delete the other
         if (local.Id != remote.Id)
         {
             if (local.CreatedAt > remote.CreatedAt)
@@ -36,7 +36,8 @@ public static class CommentLogic
             {
                 merge.Local.Created.Add(remote);
                 merge.Local.Deleted.Add(local);
-                merge.Remote.Deleted.Add(local);
+                //If the local comment has a local-only Id, there is no need to remove it from remote
+                if (!local.Id.StartsWith("local")) merge.Remote.Deleted.Add(local);
             }
         }
         //If the comments have the same Id and are different, use the Trello version

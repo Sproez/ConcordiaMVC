@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConcordiaLib\ConcordiaLib.csproj" />
+    <ProjectReference Include="..\ConcordiaSQLDatabase\ConcordiaSqlDatabase.csproj" />
   </ItemGroup>
 
 </Project>

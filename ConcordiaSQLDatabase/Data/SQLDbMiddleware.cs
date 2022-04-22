@@ -46,7 +46,11 @@ public class SQLDbMiddleware : IDbMiddleware
 
     public async Task PostComment(Comment comment)
     {
+        var oldComments = await _context.Comments.Where(c => c.CardId == comment.CardId).ToListAsync();
+        _context.Comments.RemoveRange(oldComments);
+
         await _context.Comments.AddAsync(comment);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<DatabaseImage> GetDatabaseData()
@@ -69,29 +73,29 @@ public class SQLDbMiddleware : IDbMiddleware
         var people = merge.People.Local;
 
         //Card lists
-        await _context.CardLists.AddRangeAsync(cardLists.Created);
-        _context.CardLists.UpdateRange(cardLists.Updated);
         _context.CardLists.RemoveRange(cardLists.Deleted);
+        _context.CardLists.UpdateRange(cardLists.Updated);
+        await _context.CardLists.AddRangeAsync(cardLists.Created);
 
         //People
-        await _context.People.AddRangeAsync(people.Created);
-        _context.People.UpdateRange(people.Updated);
         _context.People.RemoveRange(people.Deleted);
+        _context.People.UpdateRange(people.Updated);
+        await _context.People.AddRangeAsync(people.Created);
 
         //Cards
-        await _context.Cards.AddRangeAsync(cards.Created);
-        _context.Cards.UpdateRange(cards.Updated);
         _context.Cards.RemoveRange(cards.Deleted);
+        _context.Cards.UpdateRange(cards.Updated);
+        await _context.Cards.AddRangeAsync(cards.Created);
 
         //Assignments
-        await _context.Assignments.AddRangeAsync(assignments.Created);
-        _context.Assignments.UpdateRange(assignments.Updated);
         _context.Assignments.RemoveRange(assignments.Deleted);
+        _context.Assignments.UpdateRange(assignments.Updated);
+        await _context.Assignments.AddRangeAsync(assignments.Created);
 
         //Comments
-        await _context.Comments.AddRangeAsync(comments.Created);
-        _context.Comments.UpdateRange(comments.Updated);
         _context.Comments.RemoveRange(comments.Deleted);
+        _context.Comments.UpdateRange(comments.Updated);
+        await _context.Comments.AddRangeAsync(comments.Created);
 
         await _context.SaveChangesAsync();
     }

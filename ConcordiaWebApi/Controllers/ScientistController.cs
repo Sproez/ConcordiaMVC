@@ -2,6 +2,7 @@
 
 using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Dtos;
 
 [ApiController]
 [Route("[controller]")]
@@ -18,14 +19,16 @@ public class ScientistController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllScientist()
     {
-        return Ok(await _dbMiddleware.GetAllPeople());
+        var people = await _dbMiddleware.GetAllPeople();
+        var result = people.Select(p => new PersonDto(p));
+        return Ok(result);
     }
 
-    [HttpGet]
+    [HttpGet("{scientistId}")]
     public async Task<IActionResult> GetScientistAssignments(string scientistId)
     {
         var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-        var result = cards.OrderByDescending(c => c.Priority);
+        var result = cards.Select(c => new CardDto(c)).OrderByDescending(c => c.Priority);
         return Ok(result);
     }
 }
