@@ -16,22 +16,22 @@ using Options;
 
 public class ApiClient : IApiClient
 {
-    private readonly ApiOptions _options;
-    private readonly IMapper _mapper;
-    private readonly HttpClient _client;
+    public readonly ApiOptions options;
+    public readonly IMapper mapper;
+    public readonly HttpClient httpClient;
 
-    private readonly string BoardEndpoint;
-    private readonly string ApiAuth;
+    public readonly string BoardEndpoint;
+    public readonly string ApiAuth;
 
     public ApiClient(ApiOptions options)
     {
         //Options config
-        _options = options;
-        BoardEndpoint = $"{_options.BaseURL}/boards/{_options.ConcordiaBoardID}";
-        ApiAuth = $"key={_options.ApiKey}&token={_options.ApiToken}";
+        this.options = options;
+        BoardEndpoint = $"{this.options.BaseURL}/boards/{this.options.ConcordiaBoardID}";
+        ApiAuth = $"key={this.options.ApiKey}&token={this.options.ApiToken}";
 
         //Automapper setup
-        var pResolver = new PriorityResolver(_options);
+        var pResolver = new PriorityResolver(this.options);
 
         var automapperConfig = new MapperConfiguration(cfg =>
         {
@@ -44,14 +44,14 @@ public class ApiClient : IApiClient
         });
 
         var mapper = automapperConfig.CreateMapper();
-        _mapper = mapper;
+        this.mapper = mapper;
 
         //HTTP client setup and config
-        _client = new HttpClient();
-        _client.DefaultRequestHeaders.Accept.Clear();
-        _client.DefaultRequestHeaders.Accept.Add(
+        httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Accept.Clear();
+        httpClient.DefaultRequestHeaders.Accept.Add(
         new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
     }
 
     public async Task<DatabaseImage> GetDataFromApiAsync()
@@ -87,18 +87,18 @@ public class ApiClient : IApiClient
     private async Task<List<Tresult>> GetThingsAsync<Tresult, Tdto>(string ApiQuery)
     {
         var result = new List<Tresult>();
-        var task = _client.GetStreamAsync(ApiQuery);
+        var task = httpClient.GetStreamAsync(ApiQuery);
         var dtos = await JsonSerializer.DeserializeAsync<List<Tdto>>(await task) ?? new List<Tdto>();
         foreach (var dto in dtos)
         {
-            result.Add(_mapper.Map<Tdto, Tresult>(dto));
+            result.Add(mapper.Map<Tdto, Tresult>(dto));
         }
         return result;
     }
 
     private async Task<List<Assignment>> GetAssignmentsAsync(string query)
     {
-        var task = _client.GetStreamAsync(query);
+        var task = httpClient.GetStreamAsync(query);
         var cards = await JsonSerializer.DeserializeAsync<List<NestedCard>>(await task) ?? new List<NestedCard>();
         var result = new List<Assignment>();
         foreach (var card in cards)
@@ -135,8 +135,8 @@ public class ApiClient : IApiClient
         //Update
         foreach (var c in data.Updated)
         {
-            var apiUpdateQuery = $"{_options.BaseURL}/lists/{c.Id}?name={c.Name}&{ApiAuth}";
-            var response = await _client.PutAsync(apiUpdateQuery, null);
+            var apiUpdateQuery = $"{options.BaseURL}/lists/{c.Id}?name={c.Name}&{ApiAuth}";
+            var response = await httpClient.PutAsync(apiUpdateQuery, null);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log
@@ -146,8 +146,8 @@ public class ApiClient : IApiClient
         //Delete
         foreach (var c in data.Deleted)
         {
-            var apiDeleteQuery = $"{_options.BaseURL}/lists/{c.Id}/closed?{ApiAuth}";
-            var response = await _client.PostAsync(apiDeleteQuery, null);
+            var apiDeleteQuery = $"{options.BaseURL}/lists/{c.Id}/closed?{ApiAuth}";
+            var response = await httpClient.PostAsync(apiDeleteQuery, null);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log
@@ -171,8 +171,8 @@ public class ApiClient : IApiClient
         //Delete
         foreach (var c in data.Deleted)
         {
-            var apiDeleteQuery = $"{_options.BaseURL}/actions/{c.Id}?{ApiAuth}";
-            var response = await _client.DeleteAsync(apiDeleteQuery);
+            var apiDeleteQuery = $"{options.BaseURL}/actions/{c.Id}?{ApiAuth}";
+            var response = await httpClient.DeleteAsync(apiDeleteQuery);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log

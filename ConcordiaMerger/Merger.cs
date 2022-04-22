@@ -55,7 +55,7 @@ public class Merger
             commentsLocalDict, commentsRemoteDict,
             CommentLogic.GetMergeActions()
             );
-
+        //Delete old comments and comments on non-existing cards
         commentsMerge.Remote.Deleted.AddRange(outdatedComments);
         commentsMerge.Remote.Deleted.AddRange(badComments);
 
