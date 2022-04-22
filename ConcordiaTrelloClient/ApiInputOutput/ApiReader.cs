@@ -1,20 +1,12 @@
 ﻿namespace ConcordiaTrelloClient.ApiInputOutput;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
 using System.Text.Json;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Net.Http.Headers;
-using ConcordiaTrelloClient.Dto;
-using ConcordiaTrelloClient.Dto.NestedProperties;
+using Dto;
+using Dto.NestedProperties;
 using ConcordiaLib.Domain;
-using ConcordiaLib.Abstract;
 using ConcordiaLib.Collections;
-using ConcordiaTrelloClient.Options;
-using ConcordiaTrelloClient.Mapping;
 
 public class ApiReader
 {
@@ -28,11 +20,11 @@ public class ApiReader
     public async Task<DatabaseImage> GetDataFromApiAsync()
     {
 
-        var apiListsQuery = $"{_client.BoardEndpoint}/lists?{_client.ApiAuth}";
-        var apiCardsQuery = $"{_client.BoardEndpoint}/cards?{_client.ApiAuth}";
-        var apiPeopleQuery = $"{_client.BoardEndpoint}/members?{_client.ApiAuth}";
-        var apiCommentsQuery = $"{_client.BoardEndpoint}/actions?filter=commentCard&fields=id,data,date,idMemberCreator&{_client.ApiAuth}";
-        var apiAssignmentsQuery = $"{_client.BoardEndpoint}/cards?fields=id,idMembers&{_client.ApiAuth}";
+        var apiListsQuery = $"{_client.BoardEndpoint}/lists?{_client.options.ApiAuth}";
+        var apiCardsQuery = $"{_client.BoardEndpoint}/cards?{_client.options.ApiAuth}";
+        var apiPeopleQuery = $"{_client.BoardEndpoint}/members?{_client.options.ApiAuth}";
+        var apiCommentsQuery = $"{_client.BoardEndpoint}/actions?filter=commentCard&fields=id,data,date,idMemberCreator&{_client.options.ApiAuth}";
+        var apiAssignmentsQuery = $"{_client.BoardEndpoint}/cards?fields=id,idMembers&{_client.options.ApiAuth}";
 
         //List<CardList> cardLists = await GetListsAsync();
         //List<Card> cards = await GetCardsAsync();

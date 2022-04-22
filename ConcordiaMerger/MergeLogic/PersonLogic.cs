@@ -1,12 +1,8 @@
-﻿namespace ConcordiaMerger.MergeLogic;
-
+﻿using ConcordiaLib.Collections;
 using ConcordiaLib.Domain;
-using ConcordiaLib.Collections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+namespace ConcordiaMerger.MergeLogic;
+
 
 public static class PersonLogic
 {

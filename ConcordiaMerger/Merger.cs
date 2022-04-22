@@ -19,6 +19,8 @@ public class Merger
     public MergingResults Merge()
     {
         //Card lists
+
+        //TODO HANDLE LIST MIGRATION
         var cardListLocalDict = localData.CardLists.ToDictionary(i => i.Id);
         var cardListRemoteDict = remoteData.CardLists.ToDictionary(i => i.Id);
         MergeLocalRemote<CardList> cardListMerge = MergeHelper.Merge<CardList, string>(

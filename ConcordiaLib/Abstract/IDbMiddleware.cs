@@ -15,6 +15,8 @@ public interface IDbMiddleware
 
     Task<List<Card>> GetScientistAssignments(string scientistId);
 
+    Task PostComment(Comment comment);
+
     Task UpdateData(MergingResults merge);
 }
 

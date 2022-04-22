@@ -3,8 +3,6 @@ using NUnit.Framework;
 using ConcordiaMerger;
 using ConcordiaLib.Domain;
 using ConcordiaLib.Collections;
-using ConcordiaLib.Enum;
-using System;
 
 namespace UnitTests.MergerFolder;
 

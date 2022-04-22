@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ConcordiaTrelloClient.Options
 {
@@ -23,5 +18,7 @@ namespace ConcordiaTrelloClient.Options
         public string MediumPriorityLabelId { get; set; } = "62503330156b3d273dbf4bf7";
         [Required]
         public string LowPriorityLabelId { get; set; } = "625033198048561b7029c770";
+
+        public string ApiAuth => $"key={ApiKey}&token={ApiToken}";
     }
 }

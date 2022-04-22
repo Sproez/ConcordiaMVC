@@ -1,8 +1,6 @@
-﻿using ConcordiaLib.Abstract;
-using ConcordiaLib.Domain;
+﻿namespace ConcordiaMVC.Controllers;
 
-namespace ConcordiaMVC.Controllers;
-
+using ConcordiaLib.Abstract;
 using Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;

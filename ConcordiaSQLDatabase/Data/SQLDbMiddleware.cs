@@ -44,6 +44,11 @@ public class SQLDbMiddleware : IDbMiddleware
             .ToListAsync();
     }
 
+    public async Task PostComment(Comment comment)
+    {
+        await _context.Comments.AddAsync(comment);
+    }
+
     public async Task<DatabaseImage> GetDatabaseData()
     {
         var cards = await _context.Cards.ToListAsync();
