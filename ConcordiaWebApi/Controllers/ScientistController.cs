@@ -50,9 +50,12 @@ public class ScientistController : ControllerBase
     {
         try
         {
+            /*
             var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
             int completed = cards.Count(c => c.CardListId == _options.CompletedListId);
             int total = cards.Count();
+            */
+            (int completed, int total) = await _dbMiddleware.GetScientistPerformanceReport(scientistId, _options.CompletedListId);
             string result = $"Completed : {completed} / Total : {total}";
 
             return Ok(result);

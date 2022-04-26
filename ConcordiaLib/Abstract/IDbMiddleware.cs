@@ -15,6 +15,8 @@ public interface IDbMiddleware
 
     Task<List<Card>> GetScientistAssignments(string scientistId);
 
+    Task<(int, int)> GetScientistPerformanceReport(string scientistId, string completedListId);
+
     Task PostComment(Comment comment);
 
     Task<List<CardList>> GetAllCardLists();

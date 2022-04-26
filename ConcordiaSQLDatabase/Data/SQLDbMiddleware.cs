@@ -49,6 +49,19 @@ public class SQLDbMiddleware : IDbMiddleware
             .ToListAsync();
     }
 
+    public async Task<(int, int)> GetScientistPerformanceReport(string scientistId, string completedListId)
+    {
+        int completed = _context.Cards
+            .Include(c => c.Assignees)
+            .Where(c => c.Assignees.Any(a => a.PersonId == scientistId) && c.CardListId == completedListId)
+            .Count();
+        int total = _context.Cards
+            .Include(c => c.Assignees)
+            .Where(c => c.Assignees.Any(a => a.PersonId == scientistId))
+            .Count();
+        return (completed, total);
+    }
+
     public async Task PostComment(Comment comment)
     {
         var oldComments = await _context.Comments
