@@ -27,23 +27,35 @@ public class ApiWriter
         //Create
         foreach (var c in data.Created)
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            var apiCreateQuery = $"{_client.options.BaseURL}/lists?name={c.Name}&idBoard={_client.options.ConcordiaBoardID}&{_client.options.ApiAuth}";
+            var response = await _client.httpClient.PostAsync(apiCreateQuery, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
         }
         //Update
         foreach (var c in data.Updated)
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            var apiUpdateQuery = $"{_client.options.BaseURL}/lists/{c.Id}?name={c.Name}&{_client.options.ApiAuth}";
+            var response = await _client.httpClient.PutAsync(apiUpdateQuery, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
         }
         //Delete
         foreach (var c in data.Deleted)
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            var apiDeleteQuery = $"{_client.options.BaseURL}/lists/{c.Id}/closed?{_client.options.ApiAuth}";
+            var response = await _client.httpClient.PostAsync(apiDeleteQuery, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                //TODO log
+                var test = response.StatusCode;
+            }
         }
     }
 
