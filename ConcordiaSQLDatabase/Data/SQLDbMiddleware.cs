@@ -20,12 +20,14 @@ public class SQLDbMiddleware : IDbMiddleware
             .Include(c => c.CardList)
             .Include(c => c.LastComment)
             .Include(c => c.Assignees)
+            .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<List<Person>> GetAllPeople()
     {
         return await _context.People
+            .AsNoTracking()
             .ToListAsync();
     }
 
@@ -33,6 +35,7 @@ public class SQLDbMiddleware : IDbMiddleware
     {
         return await _context.People
             .Where(p => p.Id == id)
+            .AsNoTracking()
             .FirstOrDefaultAsync();
     }
 
@@ -41,25 +44,54 @@ public class SQLDbMiddleware : IDbMiddleware
         return await _context.Cards
             .Include(c => c.Assignees)
             .Where(c => c.Assignees.Any(a => a.PersonId == scientistId))
+            .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task PostComment(Comment comment)
     {
-        var oldComments = await _context.Comments.Where(c => c.CardId == comment.CardId).ToListAsync();
+        var oldComments = await _context.Comments
+            .Where(c => c.CardId == comment.CardId)
+            .AsNoTracking()
+            .ToListAsync();
         _context.Comments.RemoveRange(oldComments);
 
         await _context.Comments.AddAsync(comment);
         await _context.SaveChangesAsync();
     }
 
+    public async Task ChangeCardStatus(string id, string newStatus)
+    {
+        var matchingCardLists = await _context.CardLists
+            .Where(c => c.Name.Equals(newStatus))
+            .AsNoTracking()
+            .ToListAsync();
+        switch (matchingCardLists.Count)
+        {
+            case 0:
+                //TODO create new list
+                throw new NotImplementedException();
+            case 1:
+                var card = await _context.Cards
+                    .Where(c => c.Id == id)
+                    .AsNoTracking()
+                    .FirstAsync();
+                var movedCard = card with { CardListId = matchingCardLists.First().Id };
+                _context.Cards.Update(movedCard);
+                break;
+            default:
+                throw new Exception();
+        };
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<DatabaseImage> GetDatabaseData()
     {
-        var cards = await _context.Cards.ToListAsync();
-        var people = await _context.People.ToListAsync();
-        var comments = await _context.Comments.ToListAsync();
-        var assignments = await _context.Assignments.ToListAsync();
-        var cardLists = await _context.CardLists.ToListAsync();
+        var cards = await _context.Cards.AsNoTracking().ToListAsync();
+        var people = await _context.People.AsNoTracking().ToListAsync();
+        var comments = await _context.Comments.AsNoTracking().ToListAsync();
+        var assignments = await _context.Assignments.AsNoTracking().ToListAsync();
+        var cardLists = await _context.CardLists.AsNoTracking().ToListAsync();
 
         return new DatabaseImage(cards, people, comments, assignments, cardLists);
     }
@@ -103,4 +135,5 @@ public class SQLDbMiddleware : IDbMiddleware
 
 public class MergingResult
 {
+
 }

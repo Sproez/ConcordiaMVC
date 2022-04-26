@@ -47,4 +47,24 @@ public class CardController : ControllerBase
             return Problem(statusCode: StatusCodes.Status500InternalServerError);
         }
     }
+
+    [HttpPost("{id}")]
+    public async Task<IActionResult> ChangeStatus(string id, [FromBody] string newStatus)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _dbMiddleware.ChangeCardStatus(id, newStatus);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            string test = e.Message;
+            return Problem(statusCode: StatusCodes.Status500InternalServerError);
+        }
+    }
 }

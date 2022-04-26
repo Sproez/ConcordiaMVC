@@ -96,7 +96,7 @@ public class ApiWriter
         //Update
         foreach (var c in data.Updated)
         {
-            var apiUpdateQuery = $"{_client.options.BaseURL}/cards?idList={c.CardListId}&{_client.options.ApiAuth}";
+            var apiUpdateQuery = $"{_client.options.BaseURL}/cards/{c.Id}?idList={c.CardListId}&{_client.options.ApiAuth}";
             var response = await _client.httpClient.PutAsync(apiUpdateQuery, null);
             if (!response.IsSuccessStatusCode)
             {

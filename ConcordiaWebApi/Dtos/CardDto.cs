@@ -16,6 +16,9 @@ public class CardDto
     public DateTime? DueBy { get; init; }
     [Required]
     public Priority Priority { get; init; }
+    [Required]
+    public string Status { get; init; }
+    
 
 
     public CardDto(Card c)
@@ -25,6 +28,7 @@ public class CardDto
         Description = c.Description;
         DueBy = c.DueBy;
         Priority = c.Priority;
+        Status = c.CardList?.Name ?? "ERROR";
     }
 }
 
