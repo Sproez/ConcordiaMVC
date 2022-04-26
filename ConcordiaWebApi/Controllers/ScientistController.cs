@@ -1,4 +1,5 @@
 ﻿using ConcordiaWebApi.Options;
+using Microsoft.Extensions.Options;
 
 namespace ConcordiaWebApi.Controllers;
 
@@ -12,10 +13,11 @@ using Dtos;
 public class ScientistController : ControllerBase
 {
     private readonly IDbMiddleware _dbMiddleware;
-    private readonly WebApiOptions _options = new WebApiOptions();
+    private readonly WebApiOptions _options;
 
-    public ScientistController(IDbMiddleware dbMiddleware)
+    public ScientistController(IOptions<WebApiOptions> options,IDbMiddleware dbMiddleware)
     {
+        _options = options.Value;
         _dbMiddleware = dbMiddleware;
     }
 
@@ -31,7 +33,7 @@ public class ScientistController : ControllerBase
     public async Task<IActionResult> GetScientistAssignments(string scientistId)
     {
         var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-        var result = cards.Select(c => new CardDto(c)).ToList();
+        var result = cards.Where(c => c.CardListId != _options.CompletedListId).Select(c => new CardDto(c)).ToList();
         result.Sort();
         return Ok(result);
     }
@@ -42,7 +44,7 @@ public class ScientistController : ControllerBase
         var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
         int completed = cards.Count(c => c.CardListId == _options.CompletedListId);
         int total = cards.Count();
-        var result = cards.Select(c => new CardDto(c)).ToList();
+        string result = $"Completed : {completed} / Total : {total}";
 
         return Ok(result);
     }

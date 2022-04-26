@@ -1,5 +1,6 @@
 using ConcordiaLib.Abstract;
 using ConcordiaSqlDatabase.Data;
+using ConcordiaWebApi.Options;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Options
+builder.Services
+    .AddOptions<WebApiOptions>()
+    .Bind(builder.Configuration.GetSection("WebApiOptions"))
+    .ValidateDataAnnotations();
+
+//Db config
 builder.Services.AddScoped<IDbMiddleware, SQLDbMiddleware>();
 builder.Services.AddDbContext<ConcordiaDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")));

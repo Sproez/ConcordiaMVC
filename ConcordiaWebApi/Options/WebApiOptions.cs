@@ -4,7 +4,7 @@ namespace ConcordiaWebApi.Options
 {
     public class WebApiOptions
     {
-        [Required]
-        public string CompletedListId { get; set; } = "6250334296093012c69dd34e";
+        //Cards on this list will be considered completed
+        [Required] public string CompletedListId { get; set; } = null!;
     }
 }

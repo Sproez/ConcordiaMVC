@@ -1,5 +1,7 @@
 ﻿using ConcordiaLib.Domain;
 using ConcordiaWebApi.Dtos;
+using ConcordiaWebApi.Options;
+using Microsoft.Extensions.Options;
 
 namespace ConcordiaWebApi.Controllers;
 
@@ -13,9 +15,11 @@ using Dtos;
 public class CardController : ControllerBase
 {
     private readonly IDbMiddleware _dbMiddleware;
+    private readonly WebApiOptions _options;
 
-    public CardController(IDbMiddleware dbMiddleware)
+    public CardController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
     {
+        _options = options.Value;
         _dbMiddleware = dbMiddleware;
     }
 
