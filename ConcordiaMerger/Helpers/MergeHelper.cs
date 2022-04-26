@@ -10,7 +10,9 @@ namespace ConcordiaMerger.Helpers;
 public static class MergeHelper
 {
     public static MergeLocalRemote<T> Merge<T, Tkey>(
+#pragma warning disable CS8714 // supress Type Warning on Tkey
     Dictionary<Tkey, T> localDict, Dictionary<Tkey, T> remoteDict,
+#pragma warning restore CS8714 
     //Tuple with 3 Actions in it
     (Action<MergeLocalRemote<T>, T> MergeWhenOnlyLocal,
     Action<MergeLocalRemote<T>, T> MergeWhenOnlyRemote,

@@ -19,15 +19,16 @@ public class CardController : ControllerBase
         _dbMiddleware = dbMiddleware;
     }
 
-    [HttpGet]
+    [HttpGet("All")]
     public async Task<IActionResult> GetAllCards()
     {
         var cards = await _dbMiddleware.GetAllCards();
-        var result = cards.Select(c => new CardDto(c)).OrderByDescending(c => c.Priority);
+        var result = cards.Select(c => new CardDto(c)).ToList();
+        result.Sort();
         return Ok(result);
     }
 
-    [HttpPost]
+    [HttpPost("Comment")]
     public async Task<IActionResult> PostComment([FromBody] CommentDto cDto)
     {
         if (!ModelState.IsValid)
@@ -48,8 +49,16 @@ public class CardController : ControllerBase
         }
     }
 
-    [HttpPost("{id}")]
-    public async Task<IActionResult> ChangeStatus(string id, [FromBody] string newStatus)
+    [HttpGet("AllLists")]
+    public async Task<IActionResult> GetAllLists()
+    {
+        var cardLists = await _dbMiddleware.GetAllCardLists();
+        var result = cardLists.Select(c => new CardListDto(c));
+        return Ok(result);
+    }
+
+    [HttpPost("{id}/ChangeList")]
+    public async Task<IActionResult> ChangeList(string id, [FromBody] string listId)
     {
         if (!ModelState.IsValid)
         {
@@ -58,7 +67,7 @@ public class CardController : ControllerBase
 
         try
         {
-            await _dbMiddleware.ChangeCardStatus(id, newStatus);
+            await _dbMiddleware.ChangeCardStatus(id, listId);
             return Ok();
         }
         catch (Exception e)

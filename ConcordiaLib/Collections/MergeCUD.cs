@@ -12,4 +12,9 @@ public class MergeCUD<T>
         Updated = updated ?? new List<T>();
         Deleted = deleted ?? new List<T>();
     }
+
+    public bool IsEmpty() 
+    {
+        return Created.Count == 0 && Updated.Count == 0 && Deleted.Count == 0;
+    }
 }

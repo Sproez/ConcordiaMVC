@@ -43,6 +43,7 @@ public class SQLDbMiddleware : IDbMiddleware
     {
         return await _context.Cards
             .Include(c => c.Assignees)
+            .Include(c => c.CardList)
             .Where(c => c.Assignees.Any(a => a.PersonId == scientistId))
             .AsNoTracking()
             .ToListAsync();
@@ -60,28 +61,21 @@ public class SQLDbMiddleware : IDbMiddleware
         await _context.SaveChangesAsync();
     }
 
-    public async Task ChangeCardStatus(string id, string newStatus)
+    public async Task<List<CardList>> GetAllCardLists()
     {
-        var matchingCardLists = await _context.CardLists
-            .Where(c => c.Name.Equals(newStatus))
+        return await _context.CardLists
             .AsNoTracking()
             .ToListAsync();
-        switch (matchingCardLists.Count)
-        {
-            case 0:
-                //TODO create new list
-                throw new NotImplementedException();
-            case 1:
-                var card = await _context.Cards
-                    .Where(c => c.Id == id)
+    }
+
+    public async Task ChangeCardStatus(string cardId, string newListId)
+    {
+        var card = await _context.Cards
+                    .Where(c => c.Id == cardId)
                     .AsNoTracking()
                     .FirstAsync();
-                var movedCard = card with { CardListId = matchingCardLists.First().Id };
-                _context.Cards.Update(movedCard);
-                break;
-            default:
-                throw new Exception();
-        };
+        var movedCard = card with { CardListId = newListId };
+        _context.Cards.Update(movedCard);
         await _context.SaveChangesAsync();
     }
 

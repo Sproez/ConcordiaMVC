@@ -14,62 +14,25 @@ public class ApiWriter
 
     public async Task PutDataToApiAsync(MergingResults merge)
     {
-        await PutCardListsAsync(merge.CardLists.Remote);
-        await PutPeopleAsync(merge.People.Remote);
-        await PutCardsAsync(merge.Cards.Remote);
-        await PutCommentsAsync(merge.Comments.Remote);
-        await PutAssignmentsAsync(merge.Assignments.Remote);
+        if (!merge.CardLists.Remote.IsEmpty()) await PutCardListsAsync(merge.CardLists.Remote);
+        if (!merge.People.Remote.IsEmpty()) await PutPeopleAsync(merge.People.Remote);
+        if (!merge.Cards.Remote.IsEmpty()) await PutCardsAsync(merge.Cards.Remote);
+        if (!merge.Comments.Remote.IsEmpty()) await PutCommentsAsync(merge.Comments.Remote);
+        if (!merge.Assignments.Remote.IsEmpty()) await PutAssignmentsAsync(merge.Assignments.Remote);
     }
 
     #region Set methods
+#pragma warning disable CS1998 //Suppress Async warning (method should not run anyways)
     private async Task PutCardListsAsync(MergeCUD<CardList> data)
     {
-        //Create
-        foreach (var c in data.Created)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
-        }
-        //Update
-        foreach (var c in data.Updated)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
-        }
-        //Delete
-        foreach (var c in data.Deleted)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
-        }
+        //Should never happen
+        throw new Exception(data.ToString());
     }
 
     private async Task PutPeopleAsync(MergeCUD<Person> data)
     {
-        //Create
-        foreach (var p in data.Created)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + p);
-        }
-        //Update
-        foreach (var p in data.Updated)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + p);
-        }
-        //Delete
-        foreach (var p in data.Deleted)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + p);
-        }
+        //Should never happen
+        throw new Exception(data.ToString());
     }
 
     private async Task PutCardsAsync(MergeCUD<Card> data)
@@ -136,28 +99,10 @@ public class ApiWriter
 
     private async Task PutAssignmentsAsync(MergeCUD<Assignment> data)
     {
-        //Create
-        foreach (var a in data.Created)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + a);
-        }
-        //Update
-        foreach (var a in data.Updated)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + a);
-        }
-        //Delete
-        foreach (var a in data.Deleted)
-        {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + a);
-        }
+        //Should never happen
+        throw new Exception(data.ToString());
     }
+#pragma warning restore CS1998
     #endregion
 
 }

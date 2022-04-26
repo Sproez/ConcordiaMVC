@@ -17,6 +17,8 @@ public interface IDbMiddleware
 
     Task PostComment(Comment comment);
 
+    Task<List<CardList>> GetAllCardLists();
+
     Task ChangeCardStatus(string id, string newStatus);
 
     Task UpdateData(MergingResults merge);
