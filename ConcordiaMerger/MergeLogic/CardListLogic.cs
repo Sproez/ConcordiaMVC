@@ -8,7 +8,9 @@ public static class CardListLogic
 {
     public static void MergeWhenOnlyLocal(MergeLocalRemote<CardList> merge, CardList local)
     {
-        //TODO mirror local entry remotely
+        //Delete local entry
+        merge.Local.Deleted.Add(local);
+
     }
 
     public static void MergeWhenOnlyRemote(MergeLocalRemote<CardList> merge, CardList remote)
@@ -19,10 +21,10 @@ public static class CardListLogic
 
     public static void MergeWhenConflict(MergeLocalRemote<CardList> merge, CardList local, CardList remote)
     {
-        //Replace remote with local if they differ
+        //Replace local with remote if they differ
         if (local != remote)
         {
-            merge.Remote.Updated.Add(local);
+            merge.Local.Updated.Add(remote);
         }
         //Do nothing if they are equal (we're already synced)
     }

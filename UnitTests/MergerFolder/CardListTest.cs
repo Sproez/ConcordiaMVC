@@ -10,13 +10,13 @@ using NUnit.Framework;
 
 namespace UnitTests.MergerFolder;
 
-    public class CardListTest   
-    {
-        MergeLocalRemote<CardList> result = null!;
+public class CardListTest
+{
+    MergeLocalRemote<CardList> result = null!;
 
-        List<CardList> expectedLocalCreated = null!;
-        List<CardList> expectedRemoteUpdated = null!;
-        
+    List<CardList> expectedLocalCreated = null!;
+    List<CardList> expectedLocalUpdated = null!;
+    List<CardList> expectedLocalDeleted = null!;
 
     [SetUp]
     public void Setup()
@@ -36,23 +36,25 @@ namespace UnitTests.MergerFolder;
 
         //Remote can create local lists
         expectedLocalCreated = new List<CardList>() { cardListR2 };
-        //Local can update remote lists
-        expectedRemoteUpdated = new List<CardList>() { cardListL1 };
+        //Remote can update local lists
+        expectedLocalUpdated = new List<CardList>() { cardListR1 };
+        //Remote can delete local lists
+        expectedLocalDeleted = new List<CardList>() { cardListL2 };
     }
 
     [Test]
     public void Test()
     {
-        //Merge should not create or delete remote
+        //Merge should not create, update, or delete remote
         Assert.IsEmpty(result.Remote.Created);
+        Assert.IsEmpty(result.Remote.Updated);
         Assert.IsEmpty(result.Remote.Deleted);
-        //Merge should not update or delete local
-        Assert.IsEmpty(result.Local.Updated);
-        Assert.IsEmpty(result.Local.Deleted);
-        //Merge can update on remote
-        Assert.AreEqual(expectedRemoteUpdated, result.Remote.Updated);
         //Merge can create on local
         Assert.AreEqual(expectedLocalCreated, result.Local.Created);
+        //Merge can update on local
+        Assert.AreEqual(expectedLocalUpdated, result.Local.Updated);
+        //Merge can delete on local
+        Assert.AreEqual(expectedLocalDeleted, result.Local.Deleted);
 
     }
 }
