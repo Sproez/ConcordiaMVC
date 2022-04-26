@@ -8,7 +8,7 @@ public static class CardListLogic
 {
     public static void MergeWhenOnlyLocal(MergeLocalRemote<CardList> merge, CardList local)
     {
-        //Should never happen
+        //TODO mirror local entry remotely
     }
 
     public static void MergeWhenOnlyRemote(MergeLocalRemote<CardList> merge, CardList remote)

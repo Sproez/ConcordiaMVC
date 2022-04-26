@@ -7,8 +7,8 @@ using Helpers;
 
 public class Merger
 {
-    private DatabaseImage localData;
-    private DatabaseImage remoteData;
+    private readonly DatabaseImage localData;  
+    private readonly DatabaseImage remoteData;
 
     public Merger(DatabaseImage local, DatabaseImage remote)
     {

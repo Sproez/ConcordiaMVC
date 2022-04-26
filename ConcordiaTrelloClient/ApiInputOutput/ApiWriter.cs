@@ -62,25 +62,25 @@ public class ApiWriter
     private async Task PutPeopleAsync(MergeCUD<Person> data)
     {
         //Create
-        foreach (var c in data.Created)
+        foreach (var p in data.Created)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + p);
         }
         //Update
-        foreach (var c in data.Updated)
+        foreach (var p in data.Updated)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + p);
         }
         //Delete
-        foreach (var c in data.Deleted)
+        foreach (var p in data.Deleted)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + p);
         }
     }
 
@@ -149,25 +149,25 @@ public class ApiWriter
     private async Task PutAssignmentsAsync(MergeCUD<Assignment> data)
     {
         //Create
-        foreach (var c in data.Created)
+        foreach (var a in data.Created)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + a);
         }
         //Update
-        foreach (var c in data.Updated)
+        foreach (var a in data.Updated)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + a);
         }
         //Delete
-        foreach (var c in data.Deleted)
+        foreach (var a in data.Deleted)
         {
             //Should not happen
             //TODO log
-            Console.WriteLine("WARNING: " + c);
+            Console.WriteLine("WARNING: " + a);
         }
     }
     #endregion
