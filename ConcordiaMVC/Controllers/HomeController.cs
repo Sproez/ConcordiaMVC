@@ -18,36 +18,10 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var cards = await _dbMiddleware.GetAllCards();
-        var result = new CardPriorityModel(cards.OrderByDescending(c => c.Priority));
-        return View(result);
+        return View();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> ScientistList()
-    {
-        var people = await _dbMiddleware.GetAllPeople();
-        var model = new ScientistSelectionModel(people);
-
-        return View(model);
-    }
-
-    [HttpPost]
-    public IActionResult ScientistList(ScientistSelectionModel model)
-    {
-        return RedirectToAction("ScientistAssignments", "Home", new { scientistId = model.SelectedId });
-    }
-
-    public async Task<IActionResult> ScientistAssignments(string scientistId)
-    {
-        var scientist = await _dbMiddleware.GetPerson(scientistId);
-        if (scientist is null) return View("Error");
-        var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-        if (cards is null) return View("Error");
-
-        var viewmodel = new ScientistAssignmentsModel(scientist, cards);
-        return View(viewmodel);
-    }
+   
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

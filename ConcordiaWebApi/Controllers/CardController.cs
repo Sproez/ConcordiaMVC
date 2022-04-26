@@ -12,7 +12,7 @@ using Dtos;
 [ApiController]
 [Route("[controller]")]
 
-public class CardController : ControllerBase
+public class CardController : Controller
 {
     private readonly IDbMiddleware _dbMiddleware;
     private readonly WebApiOptions _options;

@@ -15,7 +15,7 @@ public class ScientistController : ControllerBase
     private readonly IDbMiddleware _dbMiddleware;
     private readonly WebApiOptions _options;
 
-    public ScientistController(IOptions<WebApiOptions> options,IDbMiddleware dbMiddleware)
+    public ScientistController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
     {
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
@@ -32,20 +32,34 @@ public class ScientistController : ControllerBase
     [HttpGet("{scientistId}/Assignments")]
     public async Task<IActionResult> GetScientistAssignments(string scientistId)
     {
-        var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-        var result = cards.Where(c => c.CardListId != _options.CompletedListId).Select(c => new CardDto(c)).ToList();
-        result.Sort();
-        return Ok(result);
+        try
+        {
+            var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
+            var result = cards.Where(c => c.CardListId != _options.CompletedListId).Select(c => new CardDto(c)).ToList();
+            result.Sort();
+            return Ok(result);
+        }
+        catch (Exception)
+        {
+            return Problem(statusCode: StatusCodes.Status500InternalServerError);
+        }
     }
 
     [HttpGet("{scientistId}/PerformanceReport")]
     public async Task<IActionResult> GetPerformanceReport(string scientistId)
     {
-        var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-        int completed = cards.Count(c => c.CardListId == _options.CompletedListId);
-        int total = cards.Count();
-        string result = $"Completed : {completed} / Total : {total}";
+        try
+        {
+            var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
+            int completed = cards.Count(c => c.CardListId == _options.CompletedListId);
+            int total = cards.Count();
+            string result = $"Completed : {completed} / Total : {total}";
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (Exception)
+        {
+            return Problem(statusCode: StatusCodes.Status500InternalServerError);
+        }
     }
 }

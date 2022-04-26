@@ -1,26 +1,5 @@
-﻿@model CardPriorityModel
+﻿@model string
 
 @{
-	ViewData["Title"] = "House of Cards";
+	ViewData["Title"] = "Base di ricerca Concordia";
 }
-
-<div class="text-center align-items-center">
-	<h1 class="display-4">@ViewData["Title"]</h1>
-	<ul class="list-group list-group-flush myList">
-		@foreach (var card in Model.Cards)
-		{
-			<li class="list-group-item bg-transparent">
-				<div class="card">
-					<div class="d-flex flex-column card-body">					
-						<h5 class="card-title">@card.Title</h5>
-						<h6 class="card-Dueby">@card.DueBy</h6>
-						<h6 class="card-Priority">@card.Priority</h6>
-						<p class="card-Description">@card.Description</p>
-						<div class="d-flex flex-column align-items-end card-footer">
-						</div>
-					</div>
-				</div>
-			</li>
-		}
-	</ul>
-</div>
