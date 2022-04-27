@@ -1,27 +1,30 @@
-﻿using ConcordiaLib.Domain;
+﻿namespace ConcordiaMVC.Controllers;
 
-namespace ConcordiaMVC.Controllers;
-
-using ConcordiaLib.Abstract;
+using Options;
 using Models;
+using ConcordiaLib.Domain;
+using Microsoft.Extensions.Options;
+using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 public class CardController : Controller
 {
     private readonly ILogger<CardController> _logger;
+    private readonly MyMvcOptions _options;
     private readonly IDbMiddleware _dbMiddleware;
 
-    public CardController(ILogger<CardController> logger, IDbMiddleware dbMiddleware)
+    public CardController(ILogger<CardController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware)
     {
         _logger = logger;
+        _options = options.Value;
         _dbMiddleware = dbMiddleware;
     }
 
     public async Task<IActionResult> Index()
     {
         var cards = await _dbMiddleware.GetAllCards();
-        var result = new CardPriorityModel(cards.OrderByDescending(c => c.Priority));
+        var result = new CardPriorityModel(cards.OrderByDescending(c => c.Priority), _options);
         return View(result);
     }
 

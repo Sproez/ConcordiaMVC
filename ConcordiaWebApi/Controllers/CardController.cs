@@ -1,13 +1,11 @@
-﻿using ConcordiaLib.Domain;
-using ConcordiaWebApi.Dtos;
-using ConcordiaWebApi.Options;
+﻿namespace ConcordiaWebApi.Controllers;
+
+using ConcordiaLib.Domain;
+using Dtos;
 using Microsoft.Extensions.Options;
-
-namespace ConcordiaWebApi.Controllers;
-
 using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using Dtos;
+using Options;
 
 [ApiController]
 [Route("[controller]")]

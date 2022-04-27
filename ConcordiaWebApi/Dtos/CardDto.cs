@@ -12,7 +12,6 @@ public class CardDto : IComparable<CardDto>
     public string Title { get; init; }
     [Required]
     public string Description { get; init; }
-
     public DateTime? DueBy { get; init; }
     [Required]
     public Priority Priority { get; init; }
