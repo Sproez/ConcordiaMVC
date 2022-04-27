@@ -1,7 +1,6 @@
-﻿using ConcordiaLib.Domain;
+﻿namespace ConcordiaMVC.Models;
 
-namespace ConcordiaMVC.Models;
-
+using ConcordiaLib.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class ScientistSelectionModel
@@ -11,7 +10,7 @@ public class ScientistSelectionModel
 
     public ScientistSelectionModel()
     {
-         Scientists = new List<SelectListItem>();
+        Scientists = new List<SelectListItem>();
     }
 
     public ScientistSelectionModel(IEnumerable<Person> people)

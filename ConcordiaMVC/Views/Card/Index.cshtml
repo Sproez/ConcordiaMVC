@@ -1,26 +1,35 @@
 ﻿@model CardPriorityModel
 
 @{
-	ViewData["Title"] = "House of Cards";
+    ViewData["Title"] = "House of Cards";
 }
 
 <div class="text-center align-items-center">
-	<h1 class="display-4">@ViewData["Title"]</h1>
-	<ul class="list-group list-group-flush myList">
-		@foreach (var card in Model.Cards)
-		{
-			<li class="list-group-item bg-transparent">
-				<div class="card">
-					<div class="d-flex flex-column card-body">
-						<h5 class="card-title">@card.Title</h5>
-						<h6 class="card-Dueby">@card.DueBy</h6>
-						<h6 class="card-Priority">@card.Priority</h6>
-						<p class="card-Description">@card.Description</p>
-						<div class="d-flex flex-column align-items-end card-footer">
-						</div>
-					</div>
-				</div>
-			</li>
-		}
-	</ul>
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <ul class="list-group list-group-flush myList">
+        @foreach (var card in Model.Cards)
+        {
+            <li class="list-group-item bg-transparent">
+                <div class="card">
+                    <div class="d-flex flex-column card-body">
+                        <h5 class="card-title">@card.Title</h5>
+                        <h6 class="card-Priority">@card.CardList.Name</h6>
+                        <h6 class="card-Priority">@card.Priority</h6>
+                        <h6 class="card-Dueby">@card.DueBy</h6>
+                        <p class="card-Description">@card.Description</p>
+                        @if (card.LastComment is not null)
+                        {
+	                        <p class="card-Description">@card.LastComment.Text</p>
+                        }
+                        <div class="row">
+                            @Html.ActionLink("Add Comment", "CreateComment", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3" })
+                            @Html.ActionLink("Change Status", "ChangeStatus", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3" })
+                        </div>
+                        <div class="d-flex flex-column align-items-end card-footer">
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
 </div>
