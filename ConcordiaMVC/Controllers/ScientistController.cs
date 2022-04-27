@@ -1,5 +1,9 @@
-﻿namespace ConcordiaMVC.Controllers;
+﻿using ConcordiaLib.Utils;
 
+namespace ConcordiaMVC.Controllers;
+
+using Microsoft.Extensions.Options;
+using Options;
 using ConcordiaLib.Abstract;
 using Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +12,17 @@ using System.Diagnostics;
 public class ScientistController : Controller
 {
     private readonly ILogger<ScientistController> _logger;
+    private readonly MyMvcOptions _options;
     private readonly IDbMiddleware _dbMiddleware;
+    private readonly CardComparer _cardComparer;
 
-    public ScientistController(ILogger<ScientistController> logger, IDbMiddleware dbMiddleware)
+    public ScientistController(ILogger<ScientistController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware)
     {
         _logger = logger;
+        _options = options.Value;
         _dbMiddleware = dbMiddleware;
+
+        _cardComparer = new CardComparer(_options.CompletedListId);
     }
 
     public async Task<IActionResult> Index()
@@ -46,8 +55,11 @@ public class ScientistController : Controller
         var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
         if (cards is null) return View("Error");
 
-        var viewmodel = new ScientistAssignmentsModel(scientist, cards);
-        return View(viewmodel);
+        var cardsOrdered = cards.OrderBy(c => c, _cardComparer);
+        var cModel = new CardPriorityModel(cardsOrdered, _options);
+
+        var viewModel = new ScientistAssignmentsModel(scientist, cModel);
+        return View(viewModel);
     }
 }
 

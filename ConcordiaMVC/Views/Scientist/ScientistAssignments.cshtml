@@ -1,27 +1,30 @@
 ﻿@model ScientistAssignmentsModel
 
-@{
-    ViewData["Title"] = "List of Assignments";
-}
+@{ ViewData["Title"] = "List of Assignments";
+    //Default to low priority
+    string priorityClass = "Low-Priority"; }
 
 <div class="text-center">
-    <h1 class="display-4">@ViewData["Title"]</h1><br/><br/>
+    <h1 class="display-4">@ViewData["Title"]</h1><br /><br />
     <h1 class="displayScientist">@Model.Scientist.Name</h1>
-    <ul class="list-group list-group-flush align-items-center">
-        @foreach (var card in Model.Cards)
+    <ul class="list-group list-group-flush myList">
+        @foreach (var card in Model.CardModel.Cards)
         {
             <li class="list-group-item">
                 <div class="card">
-                    <div class="d-flex flex-column card-body">
+
+                    @{ priorityClass = Model.CardModel.GetPriorityClass(card); }
+
+                    <div class="d-flex flex-column card-body @priorityClass">
                         <h5 class="card-title">@card.Priority</h5>
                         <h6 class="card-title">@card.Title</h6>
                         <h6 class="card-title">@card.DueBy</h6>
-                        
+
                         <div class="d-flex flex-column align-items-end card-footer">
                         </div>
                     </div>
                 </div>
             </li>
-        }
+            }
     </ul>
 </div>

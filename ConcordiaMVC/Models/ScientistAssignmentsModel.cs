@@ -5,12 +5,12 @@ using ConcordiaLib.Domain;
 public class ScientistAssignmentsModel
 {
     public Person Scientist { get; set; }
-    public IEnumerable<Card> Cards { get; set; }
+    public CardPriorityModel CardModel { get; set; }
 
-    public ScientistAssignmentsModel(Person scientist, IEnumerable<Card> cards)
+    public ScientistAssignmentsModel(Person scientist, CardPriorityModel cModel)
     {
         Scientist = scientist;
-        Cards = cards;
+        CardModel = cModel;
     }
 }
 

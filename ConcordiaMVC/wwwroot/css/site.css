@@ -19,7 +19,7 @@ body {
 
 .myList {
     margin: auto;
-    align-items:stretch;
+    align-items: stretch;
     width: 60%;
 }
 
@@ -46,7 +46,6 @@ scientists {
 
 #myButton {
     min-width: 35%;
-    background-color: #fffff4;
 }
 
 .myInput {
@@ -58,7 +57,6 @@ scientists {
 }
 
 .displayScientist {
-
     font-size: 1.75rem !important;
 }
 
@@ -85,26 +83,28 @@ scientists {
     margin-top: 50px;
 }
 
-.High-Priority{
-
-   background-color: red;
-    padding: 5px;
+.High-Priority {
+    background-color: #ff5252;
 }
+
 .Medium-Priority {
-    background-color: lightblue;
-    padding: 5px;
-}
-.Low-Priority {
-    background-color: green;
-    padding: 5px;
+    background-color: gold;
 }
 
-.Completed-Task{
-    background-color: gold;
-    padding : 5px;
+.Low-Priority {
+    background-color: lightblue;
+}
+
+.Completed-Task {
+    background-color: green;
 }
 
 .default-Priority {
     background-color: lightgray;
-    padding: 5px;
+}
+
+.ButtonRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }

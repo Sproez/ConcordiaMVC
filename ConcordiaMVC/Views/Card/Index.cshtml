@@ -8,9 +8,6 @@
 
 @{
     ViewData["Title"] = "House of Cards";
-}
-
-@{
     //Default to low priority
     string priorityClass = "Low-Priority";
 }
@@ -41,9 +38,9 @@
                         {
                             <p class="card-Description">@card.LastComment.Text</p>
                         }
-                        <div class="row">
-                            @Html.ActionLink("Add Comment", "CreateComment", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3" })
-                            @Html.ActionLink("Change Status", "ChangeStatus", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3" })
+                        <div class="ButtonRow">
+                            @Html.ActionLink("Add Comment", "CreateComment", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3 btn btn-light" })
+                            @Html.ActionLink("Change Status", "ChangeStatus", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3 btn btn-light" })
                         </div>
                         <div class="d-flex flex-column align-items-end card-footer">
                         </div>

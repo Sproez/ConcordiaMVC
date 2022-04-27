@@ -1,4 +1,6 @@
-﻿namespace ConcordiaMVC.Controllers;
+﻿using ConcordiaLib.Utils;
+
+namespace ConcordiaMVC.Controllers;
 
 using Options;
 using Models;
@@ -13,18 +15,22 @@ public class CardController : Controller
     private readonly ILogger<CardController> _logger;
     private readonly MyMvcOptions _options;
     private readonly IDbMiddleware _dbMiddleware;
+    private readonly CardComparer _cardComparer;
 
     public CardController(ILogger<CardController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware)
     {
         _logger = logger;
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
+
+        _cardComparer = new CardComparer(_options.CompletedListId);
     }
 
     public async Task<IActionResult> Index()
     {
         var cards = await _dbMiddleware.GetAllCards();
-        var result = new CardPriorityModel(cards.OrderByDescending(c => c.Priority), _options);
+        var cardsOrdered = cards.OrderBy(c => c, _cardComparer);
+        var result = new CardPriorityModel(cardsOrdered, _options);
         return View(result);
     }
 
