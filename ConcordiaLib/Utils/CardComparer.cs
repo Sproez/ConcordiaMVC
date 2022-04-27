@@ -17,7 +17,7 @@ public class CardComparer : Comparer<Card>
     {
         _completedListId = cId;
     }
-    // Compares by Length, Height, and Width.
+
     public override int Compare(Card? x, Card? y)
     {
         //Boring sort properties
@@ -32,14 +32,18 @@ public class CardComparer : Comparer<Card>
         //Medium priority: 2
         //Low priority: 1
         //Default priority: 0
+        //Completed: -1
 
         int HighP(Card c) => c.Priority == Priority.High ? 1 : 0;
         bool DueEarly(Card c) => c.DueBy is not null && (c.DueBy - DateTime.Now) < _soon && c.Priority != Priority.High;
+        bool Completed(Card c) => c.CardListId == _completedListId;
 
         int xScore = (int)x!.Priority + HighP(x);
         xScore = DueEarly(x) ? 3 : xScore;
+        xScore = Completed(x) ? -1 : xScore;
         int yScore = (int)y!.Priority + HighP(y);
         yScore = DueEarly(y) ? 3 : yScore;
+        yScore = Completed(y) ? -1 : yScore;
 
         return yScore - xScore;
     }

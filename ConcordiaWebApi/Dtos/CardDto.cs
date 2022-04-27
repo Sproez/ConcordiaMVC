@@ -39,6 +39,7 @@ public class CardDto : IComparable<CardDto>
         //Medium : 2
         //Low : 1
         //Default : 0
+        //Completed : -1
 
         int HighP(CardDto c) => c.Priority == Priority.High ? 1 : 0;
         bool DueEarly(CardDto c) => c.DueBy is not null && (c.DueBy - DateTime.Now) < fiveDays && c.Priority != Priority.High;

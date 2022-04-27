@@ -1,11 +1,11 @@
-﻿using ConcordiaWebApi.Options;
+﻿namespace ConcordiaWebApi.Controllers;
+
+using Options;
 using Microsoft.Extensions.Options;
-
-namespace ConcordiaWebApi.Controllers;
-
 using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Dtos;
+using ConcordiaLib.Utils;
 
 [ApiController]
 [Route("[controller]")]
@@ -14,11 +14,14 @@ public class ScientistController : ControllerBase
 {
     private readonly IDbMiddleware _dbMiddleware;
     private readonly WebApiOptions _options;
+    private readonly CardComparer _cardComparer;
 
     public ScientistController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
     {
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
+
+        _cardComparer = new CardComparer(_options.CompletedListId);
     }
 
     [HttpGet("All")]
@@ -35,8 +38,8 @@ public class ScientistController : ControllerBase
         try
         {
             var cards = await _dbMiddleware.GetScientistAssignments(scientistId);
-            var result = cards.Where(c => c.CardListId != _options.CompletedListId).Select(c => new CardDto(c)).ToList();
-            result.Sort();
+            var cardsOrdered = cards.OrderBy(c => c, _cardComparer);
+            var result = cardsOrdered.Select(c => new CardDto(c)).ToList();
             return Ok(result);
         }
         catch (Exception)

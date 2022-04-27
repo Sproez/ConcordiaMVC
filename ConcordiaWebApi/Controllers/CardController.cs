@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using ConcordiaLib.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Options;
+using ConcordiaLib.Utils;
 
 [ApiController]
 [Route("[controller]")]
@@ -14,19 +15,22 @@ public class CardController : Controller
 {
     private readonly IDbMiddleware _dbMiddleware;
     private readonly WebApiOptions _options;
+    private readonly CardComparer _cardComparer;
 
     public CardController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
     {
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
+
+        _cardComparer = new CardComparer(_options.CompletedListId);
     }
 
     [HttpGet("All")]
     public async Task<IActionResult> GetAllCards()
     {
         var cards = await _dbMiddleware.GetAllCards();
-        var result = cards.Select(c => new CardDto(c)).ToList();
-        result.Sort();
+        var cardsOrdered = cards.OrderBy(c => c, _cardComparer);
+        var result = cardsOrdered.Select(c => new CardDto(c)).ToList();
         return Ok(result);
     }
 
