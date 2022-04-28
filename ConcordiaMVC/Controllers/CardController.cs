@@ -17,13 +17,12 @@ public class CardController : Controller
     private readonly IDbMiddleware _dbMiddleware;
     private readonly CardComparer _cardComparer;
 
-    public CardController(ILogger<CardController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware)
+    public CardController(ILogger<CardController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware, CardComparer cardComparer)
     {
         _logger = logger;
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
-
-        _cardComparer = new CardComparer(_options.CompletedListId);
+        _cardComparer = cardComparer;
     }
 
     public async Task<IActionResult> Index()

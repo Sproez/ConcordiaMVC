@@ -10,6 +10,7 @@ using Enum;
 
 public class CardComparer : Comparer<Card>
 {
+    //TODO use options?
     private readonly TimeSpan _soon = new TimeSpan(5, 0, 0, 0);
     private readonly string _completedListId;
 
@@ -24,7 +25,6 @@ public class CardComparer : Comparer<Card>
         if (x is null && y is null) return 0;
         if (x is not null && y is null) return -1;
         if (x is null && y is not null) return 1;
-        //Here we know both x and y are not null, but the compiler doesn't
 
         //Score values:
         //High priority: 4
@@ -34,16 +34,26 @@ public class CardComparer : Comparer<Card>
         //Default priority: 0
         //Completed: -1
 
-        int HighP(Card c) => c.Priority == Priority.High ? 1 : 0;
+        int PScore(Card c) =>
+            c.Priority switch
+            {
+                Priority.High => 4,
+                Priority.Medium => 2,
+                Priority.Low => 1,
+                _ => 0
+            };
+
         bool DueEarly(Card c) => c.DueBy is not null && (c.DueBy - DateTime.Now) < _soon && c.Priority != Priority.High;
         bool Completed(Card c) => c.CardListId == _completedListId;
 
-        int xScore = (int)x!.Priority + HighP(x);
+#pragma warning disable CS8604 //Here we know both x and y are not null, but the compiler doesn't
+        int xScore = PScore(x);
         xScore = DueEarly(x) ? 3 : xScore;
         xScore = Completed(x) ? -1 : xScore;
-        int yScore = (int)y!.Priority + HighP(y);
+        int yScore = PScore(y);
         yScore = DueEarly(y) ? 3 : yScore;
         yScore = Completed(y) ? -1 : yScore;
+#pragma warning restore CS8604
 
         return yScore - xScore;
     }

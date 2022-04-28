@@ -99,7 +99,7 @@ scientists {
     background-color: green;
 }
 
-.default-Priority {
+.Default-Priority {
     background-color: lightgray;
 }
 
@@ -107,4 +107,8 @@ scientists {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+
+.DueByEarly{
+    background-color: darkorange;
 }

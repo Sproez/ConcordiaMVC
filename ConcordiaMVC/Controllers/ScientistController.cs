@@ -16,13 +16,12 @@ public class ScientistController : Controller
     private readonly IDbMiddleware _dbMiddleware;
     private readonly CardComparer _cardComparer;
 
-    public ScientistController(ILogger<ScientistController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware)
+    public ScientistController(ILogger<ScientistController> logger, IOptions<MyMvcOptions> options, IDbMiddleware dbMiddleware, CardComparer cardComparer)
     {
         _logger = logger;
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
-
-        _cardComparer = new CardComparer(_options.CompletedListId);
+        _cardComparer = cardComparer;
     }
 
     public async Task<IActionResult> Index()

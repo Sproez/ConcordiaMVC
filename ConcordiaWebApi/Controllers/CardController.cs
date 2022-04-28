@@ -17,12 +17,11 @@ public class CardController : Controller
     private readonly WebApiOptions _options;
     private readonly CardComparer _cardComparer;
 
-    public CardController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
+    public CardController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware, CardComparer cardComparer)
     {
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
-
-        _cardComparer = new CardComparer(_options.CompletedListId);
+        _cardComparer = cardComparer;
     }
 
     [HttpGet("All")]

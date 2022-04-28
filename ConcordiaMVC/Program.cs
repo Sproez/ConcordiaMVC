@@ -1,7 +1,9 @@
 using ConcordiaLib.Abstract;
+using ConcordiaLib.Utils;
 using ConcordiaMVC.Options;
 using ConcordiaSqlDatabase.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,14 @@ builder.Services
     .AddOptions<MyMvcOptions>()
     .Bind(builder.Configuration.GetSection("MyMvcOptions"))
     .ValidateDataAnnotations();
+
+//Card sorter config
+builder.Services.AddSingleton<CardComparer>(p =>
+{
+    var completedListId = p.GetRequiredService<IOptions<MyMvcOptions>>().Value.CompletedListId;
+    return new CardComparer(completedListId);
+}
+);
 
 //Db config
 builder.Services.AddScoped<IDbMiddleware, SQLDbMiddleware>();

@@ -16,12 +16,11 @@ public class ScientistController : ControllerBase
     private readonly WebApiOptions _options;
     private readonly CardComparer _cardComparer;
 
-    public ScientistController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware)
+    public ScientistController(IOptions<WebApiOptions> options, IDbMiddleware dbMiddleware, CardComparer cardComparer)
     {
         _options = options.Value;
         _dbMiddleware = dbMiddleware;
-
-        _cardComparer = new CardComparer(_options.CompletedListId);
+        _cardComparer = cardComparer;
     }
 
     [HttpGet("All")]
