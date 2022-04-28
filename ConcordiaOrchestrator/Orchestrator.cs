@@ -1,30 +1,37 @@
 ﻿using ConcordiaLib.Abstract;
 using ConcordiaLib.Collections;
 using ConcordiaMerger;
+using ConcordiaOrchestrator.Options;
 using ConcordiaSqlDatabase.Data;
 using ConcordiaTrelloClient;
 using ConcordiaTrelloClient.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ConcordiaOrchestrator;
 
-public static class Orchestrator
+public class Orchestrator
 {
+    private readonly IApiClient _client;
+    private readonly OrchestratorOptions _options;
 
-    public static async Task Sync()
+    public Orchestrator(IApiClient client, IOptions<OrchestratorOptions> options)
     {
-        //API Client setup
-        var options = new ApiOptions();
-        IApiClient trelloClient = new ApiClient(options);
+        _client = client;
+        _options = options.Value;
+    }
 
+    public async Task Sync()
+    {
         //SQL Client setup
         var dbOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
             .EnableSensitiveDataLogging(true)
-            .UseSqlServer(@"Server=DESKTOP-617MC8M\SQLEXPRESS;Database=Concordia;Trusted_Connection=True") //Use SINGLE slashes ONLY!!!
+            .UseSqlServer(_options.DefaultDatabase)
             .Options;
 
         //Get data from API
-        DatabaseImage apiData = await trelloClient.GetDataFromApiAsync();
+        DatabaseImage apiData = await _client.GetDataFromApiAsync();
+
         //Get data from DB
         DatabaseImage dbData;
 
@@ -49,7 +56,7 @@ public static class Orchestrator
         }
 
         //Put data to API
-        await trelloClient.PutDataToApiAsync(result);
+        await _client.PutDataToApiAsync(result);
 
     }
 

@@ -41,14 +41,27 @@ public class ApiReader
         var listTasks = new List<Task> { listTask, cardTask, personTask, commentTask, assignmentTask };
 
         var t = Task.WhenAll(listTasks);
-        await t;
+        try
+        {
+            await t;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("diocane");
+
+        }
+
+        
+        
 
         return new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
     }
 
     #region Get methods
+
     private async Task<List<Tresult>> GetThingsAsync<Tresult, Tdto>(string ApiQuery)
     {
+
         var result = new List<Tresult>();
         var task = _client.httpClient.GetStreamAsync(ApiQuery);
         var dtos = await JsonSerializer.DeserializeAsync<List<Tdto>>(await task) ?? new List<Tdto>();
@@ -56,8 +69,11 @@ public class ApiReader
         {
             result.Add(_client.mapper.Map<Tdto, Tresult>(dto));
         }
+
         return result;
     }
+
+
 
     private async Task<List<Assignment>> GetAssignmentsAsync(string query)
     {
