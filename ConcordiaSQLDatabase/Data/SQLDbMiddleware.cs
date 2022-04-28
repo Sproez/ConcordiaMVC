@@ -42,8 +42,9 @@ public class SQLDbMiddleware : IDbMiddleware
     public async Task<List<Card>> GetScientistAssignments(string scientistId)
     {
         return await _context.Cards
-            .Include(c => c.Assignees)
             .Include(c => c.CardList)
+            .Include(c => c.LastComment)
+            .Include(c => c.Assignees)
             .Where(c => c.Assignees.Any(a => a.PersonId == scientistId))
             .AsNoTracking()
             .ToListAsync();

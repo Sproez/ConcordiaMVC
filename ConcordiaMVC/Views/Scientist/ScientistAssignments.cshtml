@@ -10,21 +10,30 @@
     <ul class="list-group list-group-flush myList">
         @foreach (var card in Model.CardModel.Cards)
         {
-            <li class="list-group-item">
-                <div class="card">
+<li class="list-group-item">
+    <div class="card">
 
-                    @{ priorityClass = Model.CardModel.GetPriorityClass(card); }
+        @{ priorityClass = Model.CardModel.GetPriorityClass(card); }
 
-                    <div class="d-flex flex-column card-body @priorityClass">
-                        <h5 class="card-title">@card.Priority</h5>
-                        <h6 class="card-title">@card.Title</h6>
-                        <h6 class="card-title">@card.DueBy</h6>
+        <div class="d-flex flex-column card-body @priorityClass">
 
-                        <div class="d-flex flex-column align-items-end card-footer">
-                        </div>
-                    </div>
-                </div>
-            </li>
-            }
+            <h5 class="card-title">@card.Title</h5>
+            <h6 class="card-Priority">@card.CardList.Name</h6>
+            <h6 class="card-Priority">@card.Priority</h6>
+            <h6 class="card-Dueby">@card.DueBy</h6>
+            <p class="card-Description">@card.Description</p>
+
+            @if (card.LastComment is not null)
+            {
+            <p class="card-Description">@card.LastComment.Text</p>}
+            <div class="ButtonRow">
+                @Html.ActionLink("Add Comment", "CreateComment", "Card", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3 btn btn-light" })
+                @Html.ActionLink("Change Status", "ChangeStatus", "Card", new { id = card.Id }, new { @class = "btn btn-sm btn-outline-primary w-25 me-3 btn btn-light" })
+            </div>
+            <div class="d-flex flex-column align-items-end card-footer">
+            </div>
+        </div>
+    </div>
+</li>}
     </ul>
 </div>
