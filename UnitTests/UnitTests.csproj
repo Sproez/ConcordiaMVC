@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ConcordiaLib\ConcordiaLib.csproj" />
     <ProjectReference Include="..\ConcordiaMerger\ConcordiaMerger.csproj" />
+    <ProjectReference Include="..\ConcordiaTrelloClient\ConcordiaTrelloClient.csproj" />
   </ItemGroup>
 
 </Project>
