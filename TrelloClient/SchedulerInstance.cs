@@ -14,6 +14,8 @@ public class SchedulerInstance : IScheduler
 
     public DateTime StartingDate { get; private set; }
     public TimeSpan Interval { get; private set; }
+    public TimeSpan TimeWindow { get; private set; }
+
     public DateTime NextExecution { get; private set; }
 
     public SchedulerInstance(Orchestrator o)
@@ -26,10 +28,11 @@ public class SchedulerInstance : IScheduler
         await _orchestrator.Sync();
     }
 
-    public async Task ScheduleAndRun(DateTime start, TimeSpan i)
+    public async Task ScheduleAndRun(DateTime start, TimeSpan i, TimeSpan window)
     {
         StartingDate = start;
         Interval = i;
+        TimeWindow = window;
 
         NextExecution = StartingDate;
         while (true)
@@ -41,18 +44,26 @@ public class SchedulerInstance : IScheduler
     private async Task Run()
     {
         //If we missed the time window find the next one
-        while (NextExecution < DateTime.Now)
+        while (NextExecution + TimeWindow < DateTime.Now)
         {
+            Console.WriteLine($"Missed sync at {NextExecution}, retrying at {NextExecution + Interval}");
             NextExecution += Interval;
         }
         //Wait
         var remainingTime = NextExecution - DateTime.Now;
-        await Task.Delay(remainingTime);
-        //Try sync
+        if (remainingTime.TotalSeconds > 0) await Task.Delay(remainingTime);
+        //Run
+        await TrySync();
+        //Plan next run
+        NextExecution += Interval;
+    }
+
+    private async Task TrySync()
+    {
         Console.WriteLine($"Starting sync at {DateTime.Now}");
         try
         {
-            //await _orchestrator.Sync();
+            await _orchestrator.Sync();
             Console.WriteLine($"Sync succeded at {DateTime.Now}");
         }
         catch (Exception e)
@@ -61,9 +72,6 @@ public class SchedulerInstance : IScheduler
             Console.WriteLine($"Exception:");
             Console.WriteLine(e);
         }
-        //Plan next run
-        NextExecution += Interval;
     }
-
 }
 

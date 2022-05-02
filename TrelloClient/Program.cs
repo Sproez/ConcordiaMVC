@@ -29,12 +29,12 @@ builder.ConfigureServices((context, services) =>
        );
 
 using IHost host = builder.Build();
+var scheduler = host.Services.GetRequiredService<IScheduler>();
 
 //Test run
-
-var scheduler = host.Services.GetRequiredService<IScheduler>();
-//await scheduler.TestRun();
-await scheduler.ScheduleAndRun(DateTime.Now, new TimeSpan(30));
+await scheduler.TestRun();
 Console.WriteLine("Sync done");
 
-//
+//Scheduled run every 30 seconds
+//await scheduler.ScheduleAndRun(DateTime.Now, new TimeSpan(0, 0, 30), new TimeSpan(0, 0, 10));
+//Console.WriteLine("This line will never be reached");
