@@ -26,11 +26,7 @@ public class ApiReader
         var apiCommentsQuery = $"{_client.BoardEndpoint}/actions?filter=commentCard&fields=id,data,date,idMemberCreator&{_client.options.ApiAuth}";
         var apiAssignmentsQuery = $"{_client.BoardEndpoint}/cards?fields=id,idMembers&{_client.options.ApiAuth}";
 
-        //List<CardList> cardLists = await GetListsAsync();
-        //List<Card> cards = await GetCardsAsync();
-        //List<Person> people = await GetPeopleAsync();
-        //List<Comment> comments = await GetCommentsAsync();
-        //List<Assignment> assignments = await GetAssignmentsAsync();
+        //Commented for testing
 
         var listTask = GetThingsAsync<CardList, CardListDto>(apiListsQuery);
         var cardTask = GetThingsAsync<Card, CardDto>(apiCardsQuery);
@@ -41,20 +37,21 @@ public class ApiReader
         var listTasks = new List<Task> { listTask, cardTask, personTask, commentTask, assignmentTask };
 
         var t = Task.WhenAll(listTasks);
-        try
-        {
-            await t;
-        }
-        catch (Exception e)
-        {
-            throw new Exception("diocane");
 
-        }
-
-        
-        
+        await t;
 
         return new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
+
+        /*
+        //Testing code
+        var listR = await GetThingsAsync<CardList, CardListDto>(apiListsQuery);
+        var cardR = await GetThingsAsync<Card, CardDto>(apiCardsQuery);
+        var personR = await GetThingsAsync<Person, PersonDto>(apiPeopleQuery);
+        var commentR = await GetThingsAsync<Comment, CommentDto>(apiCommentsQuery);
+        var assignmentR = await GetAssignmentsAsync(apiAssignmentsQuery);
+
+        return new DatabaseImage(cardR, personR, commentR, assignmentR, listR);
+        */
     }
 
     #region Get methods
@@ -64,7 +61,10 @@ public class ApiReader
 
         var result = new List<Tresult>();
         var task = _client.httpClient.GetStreamAsync(ApiQuery);
-        var dtos = await JsonSerializer.DeserializeAsync<List<Tdto>>(await task) ?? new List<Tdto>();
+
+        var jsonResult = await task;
+
+        var dtos = await JsonSerializer.DeserializeAsync<List<Tdto>>(jsonResult) ?? new List<Tdto>();
         foreach (var dto in dtos)
         {
             result.Add(_client.mapper.Map<Tdto, Tresult>(dto));

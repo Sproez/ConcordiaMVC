@@ -30,16 +30,11 @@ builder.ConfigureServices((context, services) =>
 
 using IHost host = builder.Build();
 
-//This works
+//Test run
 
-var orchestrator = host.Services.GetRequiredService<Orchestrator>();
-await orchestrator.Sync();
-Console.WriteLine("DONE");
+var scheduler = host.Services.GetRequiredService<IScheduler>();
+//await scheduler.TestRun();
+await scheduler.ScheduleAndRun(DateTime.Now, new TimeSpan(30));
+Console.WriteLine("Sync done");
 
-//This doesn't
-
-//var scheduler = host.Services.GetRequiredService<IScheduler>();
-
-//scheduler.TestRun();
-//Console.WriteLine("DONE TOO");
-
+//

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConcordiaLib.Abstract;
 
-    public interface IScheduler
-    {
-        Task TestRun();
-    }
-
+public interface IScheduler
+{
+    Task TestRun();
+    Task ScheduleAndRun(DateTime start, TimeSpan i);
+}

@@ -3,8 +3,6 @@ using ConcordiaLib.Collections;
 using ConcordiaMerger;
 using ConcordiaOrchestrator.Options;
 using ConcordiaSqlDatabase.Data;
-using ConcordiaTrelloClient;
-using ConcordiaTrelloClient.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

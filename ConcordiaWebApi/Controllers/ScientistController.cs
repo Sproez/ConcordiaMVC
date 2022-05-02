@@ -58,7 +58,7 @@ public class ScientistController : ControllerBase
             int total = cards.Count();
             */
             (int completed, int total) = await _dbMiddleware.GetScientistPerformanceReport(scientistId, _options.CompletedListId);
-            string result = $"Completed : {completed} / Total : {total}";
+            var result = new ReportDto(scientistId, completed, total);
 
             return Ok(result);
         }

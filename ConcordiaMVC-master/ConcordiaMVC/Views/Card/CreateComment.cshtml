@@ -1,0 +1,19 @@
+﻿@model CommentCreationModel
+
+@{
+    ViewData["Title"] = "Add a comment";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+
+    <form class="card" asp-action="CreateComment" asp-controller="Card" method="post">
+        <div class="form-group">
+            <label for="body">New Comment</label>
+            <input asp-for="Text" type="text" class="form-control" required placeholder="Insert your comment here">
+
+            <input asp-for="@Model.CardId" type="hidden" value="@Model.CardId" />
+        </div>
+        <button type="Submit" class="btn btn-sm btn-outline-primary">Post comment</button>
+    </form>
+</div>
