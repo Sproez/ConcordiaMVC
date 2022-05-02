@@ -13,13 +13,14 @@ builder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<IScheduler, SchedulerInstance>();
                 services.AddSingleton<Orchestrator>();
-                services.AddSingleton<IApiClient, ApiClient>();
+                services.AddHttpClient();
+                services.AddHttpClient<IApiClient, ApiClient>();
                 services.AddSingleton<ApiOptions>();
 
                 services.AddOptions<OrchestratorOptions>()
                         .Bind(context.Configuration.GetSection("OrchestratorOptions"));
             }
-       //TODO figure out how to handle scoped services
+       //TODO figure out how to handle scoped services (make a factory)
        /*
        .AddDbContext<ConcordiaDbContext>(
             options => options.EnableSensitiveDataLogging(true)

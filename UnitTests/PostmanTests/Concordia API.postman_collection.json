@@ -1,0 +1,737 @@
+{
+	"info": {
+		"_postman_id": "3120a188-6009-465e-b8a4-1da2e2f2fa74",
+		"name": "Concordia API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Scientists",
+			"item": [
+				{
+					"name": "PerformanceReport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const responseData = response.json();\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"object\",\r",
+									"                \"required\": [\r",
+									"                    \"scientistId\",\r",
+									"                    \"completedTasks\",\r",
+									"                    \"assignedTasks\",\r",
+									"                    \"percentCompleted\"\r",
+									"                ],\r",
+									"                \"properties\" : {\r",
+									"                    \"scientistId\" : {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    },\r",
+									"                    \"completedTasks\": {\r",
+									"                        \"type\" : \"integer\"\r",
+									"                    },\r",
+									"                    \"assignedTasks\": {\r",
+									"                        \"type\" : \"integer\"\r",
+									"                    },\r",
+									"                        \"percentCompleted\": {\r",
+									"                        \"type\" : \"string\"\r",
+									"                        },\r",
+									"                }\r",
+									"            }\r",
+									"           \r",
+									" \r",
+									"            \r",
+									"\r",
+									"pm.test(\"Basic OK\", function(){\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseURL}}/Scientist/{{TestScientistID}}/PerformanceReport",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Scientist",
+								"{{TestScientistID}}",
+								"PerformanceReport"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assignments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const responseData = response.json();\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"array\",\r",
+									"            \"additionalItems\": false,\r",
+									"            \"items\": {\r",
+									"                \"type\": \"object\",\r",
+									"                \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"title\",\r",
+									"                    \"description\",\r",
+									"                    \"dueBy\",\r",
+									"                    \"priority\",\r",
+									"                    \"status\"\r",
+									"                ],\r",
+									"                \"properties\" : {\r",
+									"                    \"id\" : {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    },\r",
+									"                    \"title\": {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    }\r",
+									"                    ,\r",
+									"                    \"description\": {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    },\r",
+									"                    \"priority\": {\r",
+									"                        \"type\" : \"integer\"\r",
+									"                    },\r",
+									"                     \"status\": {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    },\r",
+									"                }\r",
+									"            }\r",
+									"           \r",
+									"}  \r",
+									"            \r",
+									"\r",
+									"pm.test(\"Basic OK\", function(){\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseURL}}/Scientist/{{TestScientistID}}/Assignments",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Scientist",
+								"{{TestScientistID}}",
+								"Assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const responseData = response.json();\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"array\",\r",
+									"            \"additionalItems\": false,\r",
+									"            \"items\": {\r",
+									"                \"type\": \"object\",\r",
+									"                \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"name\"\r",
+									"                ],\r",
+									"                \"properties\" : {\r",
+									"                    \"id\" : {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                        \"type\" : \"string\"\r",
+									"                    }\r",
+									"                }\r",
+									"            }\r",
+									"           \r",
+									"}  \r",
+									"            \r",
+									"\r",
+									"pm.test(\"Basic OK\", function(){\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseURL}}/Scientist/All",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Scientist",
+								"All"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cards",
+			"item": [
+				{
+					"name": "GetById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const responseData = response.json();\r",
+									"var expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"required\": [\r",
+									"        \"name\",\r",
+									"        \"surname\",\r",
+									"        \"email\",\r",
+									"        \"id\",\r",
+									"        \"createdAt\",\r",
+									"        \"updatedAt\"\r",
+									"    ],\r",
+									"    \"properties\": {\r",
+									"        \"name\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"surname\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"email\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"id\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"createdAt\": {\r",
+									"            \"type\": \"string\"\r",
+									"        },\r",
+									"        \"updatedAt\": {\r",
+									"            \"type\": [\r",
+									"                \"null\",\r",
+									"                \"string\"\r",
+									"            ]\r",
+									"        }\r",
+									"    },\r",
+									"    \"additionalProperties\": true\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Basic OK\", function(){\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const callOptions = {\r",
+									"    url: pm.environment.get('BaseURL') + '/Author',\r",
+									"    method: 'GET'\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest(callOptions, function (err, response) {\r",
+									"    \r",
+									"    console.log(response)\r",
+									"\r",
+									"    if(err != null){\r",
+									"        console.log(\"An error occured getting the list of all Authors. Error: \" + err.json)\r",
+									"        return;\r",
+									"    }\r",
+									"    \r",
+									"    const jsonResponse=response.json();\r",
+									"    console.log(\"Response JSON: \"+ JSON.stringify(jsonResponse));\r",
+									"\r",
+									"    pm.environment.set('AuthorID', jsonResponse[0].id)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7159/Author/{{AuthorID}}",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7159",
+							"path": [
+								"Author",
+								"{{AuthorID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const responseData = response.json();\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"array\",\r",
+									"    \"additionalItems\": true,\r",
+									"    \"items\": {\r",
+									"        \"anyOf\": [\r",
+									"            {\r",
+									"                \"type\": \"object\",\r",
+									"                \"required\": [\r",
+									"                    \"name\",\r",
+									"                    \"surname\",\r",
+									"                    \"id\",\r",
+									"                    \"email\",\r",
+									"                    \"createdAt\",\r",
+									"                    \"updatedAt\"\r",
+									"                ],\r",
+									"                \"properties\": {\r",
+									"                    \"name\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"surname\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"id\": {\r",
+									"                        \"type\": \"integer\"\r",
+									"                    },\r",
+									"                    \"email\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"createdAt\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"updatedAt\": {\r",
+									"                        \"type\": [\r",
+									"                            \"null\",\r",
+									"                            \"string\"\r",
+									"                        ]\r",
+									"                    }\r",
+									"                },\r",
+									"                \"additionalProperties\": true\r",
+									"            }\r",
+									"        ]\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Basic OK\", function(){\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7159/Author",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7159",
+							"path": [
+								"Author"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"required\": [\r",
+									"        \"name\",\r",
+									"        \"surname\",\r",
+									"        \"email\",\r",
+									"        \"id\"\r",
+									"    ],\r",
+									"    \"properties\": {\r",
+									"        \"name\": { \r",
+									"            \"value\": \"Test\" \r",
+									"        },\r",
+									"        \"surname\": { \r",
+									"            \"value\": \"Author\"\r",
+									"        },\r",
+									"        \"email\": { \r",
+									"            \"value\": \"test.author@gmail.com\"\r",
+									"        },\r",
+									"        \"id\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"additionalProperties\": true\r",
+									"}\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});\r",
+									"\r",
+									"pm.test('Resource created exists', function() {\r",
+									"  const callOptions = {\r",
+									"    url: pm.response.headers.get('Location'),\r",
+									"    method: 'GET'\r",
+									"  }\r",
+									"\r",
+									"  pm.sendRequest(callOptions, function (_, response) {\r",
+									"    pm.expect(response.code).to.equal(200)\r",
+									"    \r",
+									"    // CLEANUP\r",
+									"    let authorId = pm.response.json().id;\r",
+									"\r",
+									"    const callOptions = {\r",
+									"        url: pm.environment.get('BaseURL') + '/Author/' + authorId,\r",
+									"        method: 'DELETE'\r",
+									"    }\r",
+									"\r",
+									"    pm.sendRequest(callOptions, function (err, response) {\r",
+									"        \r",
+									"        console.log(response)\r",
+									"\r",
+									"        if(err != null){\r",
+									"            console.log(\"An error occured cleaning up test author: \" + err.json)\r",
+									"            return;\r",
+									"        }\r",
+									"        \r",
+									"        const jsonResponse=response.json();\r",
+									"        console.log(\"Test author cleaned up correctly\");\r",
+									"    });\r",
+									"  });\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Test\",\r\n    \"Surname\": \"Author\",\r\n    \"Email\": \"test.author@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseURL}}/Author",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Author"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const author = \r",
+									"{\r",
+									"    \"Name\": \"update\",\r",
+									"    \"Surname\": \"test\",\r",
+									"    \"Email\": \"update.test@mail.com\"\r",
+									"};\r",
+									"\r",
+									"const callOptions = {\r",
+									"    url: pm.environment.get('BaseURL') + '/Author',\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json'\r",
+									"    },\r",
+									"body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(author)\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest(callOptions, function (err, response) {\r",
+									"    \r",
+									"    console.log(response)\r",
+									"\r",
+									"    if(err != null){\r",
+									"        console.log(\"An error occured creating test Author. Error: \" + err.json)\r",
+									"        return;\r",
+									"    }\r",
+									"    \r",
+									"    const jsonResponse=response.json();\r",
+									"    console.log(\"Response JSON: \"+ JSON.stringify(jsonResponse));\r",
+									"\r",
+									"    pm.environment.set('AuthorID', jsonResponse.id)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const expectedSchema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"required\": [\r",
+									"        \"name\",\r",
+									"        \"surname\",\r",
+									"        \"email\",\r",
+									"        \"id\"\r",
+									"    ],\r",
+									"    \"properties\": {\r",
+									"        \"name\": { \r",
+									"            \"value\": \"afterupdate\" \r",
+									"        },\r",
+									"        \"surname\": { \r",
+									"            \"value\": \"testtest\"\r",
+									"        },\r",
+									"        \"email\": { \r",
+									"            \"value\": \"afterupdate@test.com\"\r",
+									"        },\r",
+									"        \"id\": {\r",
+									"            \"type\": \"integer\"\r",
+									"        }\r",
+									"    },\r",
+									"    \"additionalProperties\": true\r",
+									"}\r",
+									"\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.response.to.have.jsonSchema(expectedSchema);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// CLEANUP\r",
+									"let authorId = pm.response.json().id;\r",
+									"\r",
+									"const callOptions = {\r",
+									"    url: pm.environment.get('BaseURL') + '/Author/' + authorId,\r",
+									"    method: 'DELETE'\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest(callOptions, function (err, response) {\r",
+									"    \r",
+									"    console.log(response)\r",
+									"\r",
+									"    if(err != null){\r",
+									"        console.log(\"An error occured cleaning up test author: \" + err.json)\r",
+									"        return;\r",
+									"    }\r",
+									"    \r",
+									"    const jsonResponse=response.json();\r",
+									"    console.log(\"Test author cleaned up correctly\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"afterupdate\",\r\n    \"Surname\": \"testtest\",\r\n    \"Email\": \"afterupdate@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseURL}}/Author/{{AuthorID}}",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Author",
+								"{{AuthorID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const author = \r",
+									"{\r",
+									"    \"Name\": \"test\",\r",
+									"    \"Surname\": \"deletion\",\r",
+									"    \"Email\": \"mail@to.delete\"\r",
+									"};\r",
+									"\r",
+									"const callOptions = {\r",
+									"    url: pm.environment.get('BaseURL') + '/Author',\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json'\r",
+									"    },\r",
+									"body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(author)\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest(callOptions, function (err, response) {\r",
+									"    \r",
+									"    console.log(response)\r",
+									"\r",
+									"    if(err != null){\r",
+									"        console.log(\"An error occured creating test Author. Error: \" + err.json)\r",
+									"        return;\r",
+									"    }\r",
+									"    \r",
+									"    const jsonResponse=response.json();\r",
+									"    console.log(\"Response JSON: \"+ JSON.stringify(jsonResponse));\r",
+									"\r",
+									"    pm.environment.set('AuthorID', jsonResponse.id)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Basic OK\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is deleted author ID\", function(){\r",
+									"    const id = pm.environment.get(\"AuthorID\").toString();\r",
+									"    pm.response.to.have.body(id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseURL}}/Author/{{AuthorID}}",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"Author",
+								"{{AuthorID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
