@@ -100,6 +100,7 @@ public class AutomapperTest
         Assert.AreEqual(entity, mappedEntity);
     }
 
+    //Doesn't use Automapper but whatever
     [Test]
     public void AssignmentTest()
     {
