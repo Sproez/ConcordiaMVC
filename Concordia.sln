@@ -31,7 +31,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaWebApi", "ConcordiaWebApi\ConcordiaWebApi.csproj", "{B5975A13-756A-4E7C-B39D-0B5C5B995FAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcordiaPDFGenerator", "ConcordiaPDFGenerator\ConcordiaPDFGenerator.csproj", "{EF6407B5-1B99-4FD2-B260-2A8064B6C6AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaPDFGenerator", "ConcordiaPDFGenerator\ConcordiaPDFGenerator.csproj", "{EF6407B5-1B99-4FD2-B260-2A8064B6C6AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentazione", "Documentazione", "{04C103B5-7500-4164-B07D-43AF217C9A02}"
+	ProjectSection(SolutionItems) = preProject
+		Documentazione\PROGETTO BASE SPAZIALE.pdf = Documentazione\PROGETTO BASE SPAZIALE.pdf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
