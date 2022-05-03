@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ConcordiaLib\ConcordiaLib.csproj" />
     <ProjectReference Include="..\ConcordiaOrchestrator\ConcordiaOrchestrator.csproj" />
+    <ProjectReference Include="..\ConcordiaPDFGenerator\ConcordiaPDFGenerator.csproj" />
     <ProjectReference Include="..\ConcordiaSQLDatabase\ConcordiaSqlDatabase.csproj" />
     <ProjectReference Include="..\ConcordiaTrelloClient\ConcordiaTrelloClient.csproj" />
   </ItemGroup>

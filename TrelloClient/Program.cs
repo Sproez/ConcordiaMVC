@@ -1,6 +1,7 @@
 ﻿using ConcordiaLib.Abstract;
 using ConcordiaOrchestrator;
 using ConcordiaOrchestrator.Options;
+using ConcordiaPDFGenerator;
 using ConcordiaTrelloClient;
 using ConcordiaTrelloClient.Options;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ builder.ConfigureServices((context, services) =>
                 services.AddSingleton<IScheduler, SchedulerInstance>();
                 services.AddSingleton<Orchestrator>();
                 services.AddHttpClient();
-                services.AddHttpClient<IApiClient, ApiClient>();
+                services.AddSingleton<IApiClient, ApiClient>();
                 services.AddSingleton<ApiOptions>();
 
                 services.AddOptions<OrchestratorOptions>()

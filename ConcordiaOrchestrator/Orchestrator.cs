@@ -2,6 +2,7 @@
 using ConcordiaLib.Collections;
 using ConcordiaMerger;
 using ConcordiaOrchestrator.Options;
+using ConcordiaPDFGenerator;
 using ConcordiaSqlDatabase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -56,6 +57,16 @@ public class Orchestrator
         //Put data to API
         await _client.PutDataToApiAsync(result);
 
+
+        //Create PDF report
+
+        using (var dbContext = new ConcordiaDbContext(dbOptions))
+        {
+            var db = new SQLDbMiddleware(dbContext);
+
+            var pdfGenerator = new PdfGenerator(db, _options.CompletedListId);
+            await pdfGenerator.Test();
+        }
     }
 
 }
