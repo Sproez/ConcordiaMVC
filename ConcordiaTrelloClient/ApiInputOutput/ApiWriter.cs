@@ -5,11 +5,13 @@ namespace ConcordiaTrelloClient.ApiInputOutput;
 
 public class ApiWriter
 {
+    private readonly HttpClient _httpClient;
     private readonly ApiClient _client;
 
     public ApiWriter(ApiClient parent)
     {
         _client = parent;
+        _httpClient = _client.httpClientFactory.CreateClient("TrelloApi");
     }
 
     public async Task PutDataToApiAsync(MergingResults merge)
@@ -48,7 +50,7 @@ public class ApiWriter
         foreach (var c in data.Updated)
         {
             var apiUpdateQuery = $"{_client.options.BaseURL}/cards/{c.Id}?idList={c.CardListId}&{_client.options.ApiAuth}";
-            var response = await _client.httpClient.PutAsync(apiUpdateQuery, null);
+            var response = await _httpClient.PutAsync(apiUpdateQuery, null);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log
@@ -70,7 +72,7 @@ public class ApiWriter
         foreach (var c in data.Created)
         {
             var apiCreateQuery = $"{_client.options.BaseURL}/cards/{c.CardId}/actions/comments?text={c.Text}&{_client.options.ApiAuth}";
-            var response = await _client.httpClient.PostAsync(apiCreateQuery, null);
+            var response = await _httpClient.PostAsync(apiCreateQuery, null);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log
@@ -88,7 +90,7 @@ public class ApiWriter
         foreach (var c in data.Deleted)
         {
             var apiDeleteQuery = $"{_client.options.BaseURL}/actions/{c.Id}?{_client.options.ApiAuth}";
-            var response = await _client.httpClient.DeleteAsync(apiDeleteQuery);
+            var response = await _httpClient.DeleteAsync(apiDeleteQuery);
             if (!response.IsSuccessStatusCode)
             {
                 //TODO log

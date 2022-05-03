@@ -7,7 +7,6 @@ using Options;
 using ConcordiaLib.Abstract;
 using Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 public class ScientistController : Controller
 {

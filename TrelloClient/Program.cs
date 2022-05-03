@@ -1,9 +1,12 @@
-﻿using ConcordiaLib.Abstract;
+﻿using System.Net.Http.Headers;
+using ConcordiaLib.Abstract;
 using ConcordiaOrchestrator;
 using ConcordiaOrchestrator.Options;
 using ConcordiaPDFGenerator;
+using ConcordiaSqlDatabase.Data;
 using ConcordiaTrelloClient;
 using ConcordiaTrelloClient.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scheduler;
@@ -14,20 +17,24 @@ builder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<IScheduler, SchedulerInstance>();
                 services.AddSingleton<Orchestrator>();
-                services.AddHttpClient();
+                services.AddHttpClient("TrelloApi", client =>
+                 {
+                     client.DefaultRequestHeaders.Accept.Clear();
+                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                     client.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
+                 }
+                );
                 services.AddSingleton<IApiClient, ApiClient>();
                 services.AddSingleton<ApiOptions>();
 
                 services.AddOptions<OrchestratorOptions>()
                         .Bind(context.Configuration.GetSection("OrchestratorOptions"));
+
+                services.AddDbContextFactory<ConcordiaDbContext>(
+                    options =>
+                    options.UseSqlServer(context.Configuration.GetSection("OrchestratorOptions")["DefaultDatabase"])
+                );
             }
-       //TODO figure out how to handle scoped services (make a factory)
-       /*
-       .AddDbContext<ConcordiaDbContext>(
-            options => options.EnableSensitiveDataLogging(true)
-            .UseSqlServer(@"Server=DESKTOP-617MC8M\SQLEXPRESS;Database=Concordia;Trusted_Connection=True")
-            )
-       */
        );
 
 using IHost host = builder.Build();

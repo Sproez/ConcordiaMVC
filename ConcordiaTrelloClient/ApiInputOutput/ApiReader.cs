@@ -10,16 +10,17 @@ using ConcordiaLib.Collections;
 
 public class ApiReader
 {
+    private readonly HttpClient _httpClient;
     private readonly ApiClient _client;
 
     public ApiReader(ApiClient parent)
     {
         _client = parent;
+        _httpClient = _client.httpClientFactory.CreateClient("TrelloApi");
     }
 
     public async Task<DatabaseImage> GetDataFromApiAsync()
     {
-
         var apiListsQuery = $"{_client.BoardEndpoint}/lists?{_client.options.ApiAuth}";
         var apiCardsQuery = $"{_client.BoardEndpoint}/cards?{_client.options.ApiAuth}";
         var apiPeopleQuery = $"{_client.BoardEndpoint}/members?{_client.options.ApiAuth}";
@@ -60,7 +61,7 @@ public class ApiReader
     {
 
         var result = new List<Tresult>();
-        var task = _client.httpClient.GetStreamAsync(ApiQuery);
+        var task = _httpClient.GetStreamAsync(ApiQuery);
 
         var jsonResult = await task;
 
@@ -77,7 +78,7 @@ public class ApiReader
 
     private async Task<List<Assignment>> GetAssignmentsAsync(string query)
     {
-        var task = _client.httpClient.GetStreamAsync(query);
+        var task = _httpClient.GetStreamAsync(query);
         var cards = await JsonSerializer.DeserializeAsync<List<NestedCard>>(await task) ?? new List<NestedCard>();
         var result = new List<Assignment>();
         foreach (var card in cards)

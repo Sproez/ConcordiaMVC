@@ -11,30 +11,26 @@ namespace ConcordiaOrchestrator;
 
 public class Orchestrator
 {
+    private readonly IDbContextFactory<ConcordiaDbContext> _dbContextFactory;
     private readonly IApiClient _client;
     private readonly OrchestratorOptions _options;
 
-    public Orchestrator(IApiClient client, IOptions<OrchestratorOptions> options)
+    public Orchestrator(IDbContextFactory<ConcordiaDbContext> dbContextFactory, IApiClient client, IOptions<OrchestratorOptions> options)
     {
+        _dbContextFactory = dbContextFactory;
         _client = client;
         _options = options.Value;
     }
 
     public async Task Sync()
     {
-        //SQL Client setup
-        var dbOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-            .EnableSensitiveDataLogging(true)
-            .UseSqlServer(_options.DefaultDatabase)
-            .Options;
-
         //Get data from API
         DatabaseImage apiData = await _client.GetDataFromApiAsync();
 
         //Get data from DB
         DatabaseImage dbData;
 
-        using (var dbContext = new ConcordiaDbContext(dbOptions))
+        using (var dbContext = _dbContextFactory.CreateDbContext())
         {
             var db = new SQLDbMiddleware(dbContext);
 
@@ -46,8 +42,8 @@ public class Orchestrator
         var result = merger.Merge();
 
         //Write data to DB
-        
-        using (var dbContext = new ConcordiaDbContext(dbOptions))
+
+        using (var dbContext = _dbContextFactory.CreateDbContext())
         {
             var db = new SQLDbMiddleware(dbContext);
 
@@ -60,7 +56,7 @@ public class Orchestrator
 
         //Create PDF report
 
-        using (var dbContext = new ConcordiaDbContext(dbOptions))
+        using (var dbContext = _dbContextFactory.CreateDbContext())
         {
             var db = new SQLDbMiddleware(dbContext);
 

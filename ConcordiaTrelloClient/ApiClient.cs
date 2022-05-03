@@ -1,11 +1,10 @@
-﻿using ConcordiaTrelloClient.ApiInputOutput;
-using ConcordiaTrelloClient.Mapping;
+﻿namespace ConcordiaTrelloClient;
 
-namespace ConcordiaTrelloClient;
-
+using System.Net.Http;
+using ApiInputOutput;
+using Mapping;
 using AutoMapper;
 using System.Threading.Tasks;
-using System.Net.Http.Headers;
 using Dto;
 using ConcordiaLib.Domain;
 using ConcordiaLib.Abstract;
@@ -14,16 +13,17 @@ using Options;
 
 public class ApiClient : IApiClient
 {
+    public readonly IHttpClientFactory httpClientFactory;
+
     public readonly ApiOptions options;
     public readonly IMapper mapper;
-    public readonly HttpClient httpClient;
 
     public readonly string BoardEndpoint;
 
     private readonly ApiReader _reader;
     private readonly ApiWriter _writer;
 
-    public ApiClient(ApiOptions options)
+    public ApiClient(IHttpClientFactory factory, ApiOptions options)
     {
         //Options config
         this.options = options;
@@ -45,12 +45,8 @@ public class ApiClient : IApiClient
         var mapper = automapperConfig.CreateMapper();
         this.mapper = mapper;
 
-        //HTTP client setup and config
-        httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Accept.Clear();
-        httpClient.DefaultRequestHeaders.Accept.Add(
-        new MediaTypeWithQualityHeaderValue("application/json"));
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
+        //HTTP client factory setup
+        httpClientFactory = factory;
 
         //Reader and writer setup
         _reader = new ApiReader(this);
@@ -68,5 +64,3 @@ public class ApiClient : IApiClient
     }
 
 }
-
-

@@ -11,7 +11,7 @@ public class ConcordiaDbContext : DbContext
     public DbSet<Comment> Comments { get; set; } = null!;
     public DbSet<Assignment> Assignments { get; set; } = null!;
 
-    public ConcordiaDbContext(DbContextOptions options) : base(options)
+    public ConcordiaDbContext(DbContextOptions<ConcordiaDbContext> options) : base(options)
     {
     }
 
