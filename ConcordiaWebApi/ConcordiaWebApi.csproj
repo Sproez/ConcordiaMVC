@@ -7,12 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <Compile Remove="Data\**" />
+    <Compile Remove="Domain\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="Domain\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <None Remove="Data\**" />
+    <None Remove="Domain\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Data\" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
