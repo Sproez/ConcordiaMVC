@@ -19,7 +19,12 @@ public class AutomapperTest
     [SetUp]
     public void Setup()
     {
-        var options = new ApiOptions();
+        var options = new ApiOptions()
+        {
+            HighPriorityLabelId = "625032fb182ca5704dde89f7",
+            MediumPriorityLabelId = "62503330156b3d273dbf4bf7",
+            LowPriorityLabelId = "625033198048561b7029c770"
+        };
         var pResolver = new PriorityResolver(options);
         var automapperConfig = new MapperConfiguration(cfg =>
         {

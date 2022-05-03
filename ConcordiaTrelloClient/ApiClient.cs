@@ -1,4 +1,6 @@
-﻿namespace ConcordiaTrelloClient;
+﻿using Microsoft.Extensions.Options;
+
+namespace ConcordiaTrelloClient;
 
 using System.Net.Http;
 using ApiInputOutput;
@@ -23,10 +25,10 @@ public class ApiClient : IApiClient
     private readonly ApiReader _reader;
     private readonly ApiWriter _writer;
 
-    public ApiClient(IHttpClientFactory factory, ApiOptions options)
+    public ApiClient(IHttpClientFactory factory, IOptions<ApiOptions> options)
     {
         //Options config
-        this.options = options;
+        this.options = options.Value;
         BoardEndpoint = $"{this.options.BaseURL}/boards/{this.options.ConcordiaBoardID}";
 
         //Automapper setup

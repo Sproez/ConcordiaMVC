@@ -2,7 +2,6 @@
 using ConcordiaLib.Abstract;
 using ConcordiaOrchestrator;
 using ConcordiaOrchestrator.Options;
-using ConcordiaPDFGenerator;
 using ConcordiaSqlDatabase.Data;
 using ConcordiaTrelloClient;
 using ConcordiaTrelloClient.Options;
@@ -17,19 +16,23 @@ builder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<IScheduler, SchedulerInstance>();
                 services.AddSingleton<Orchestrator>();
-                services.AddHttpClient("TrelloApi", client =>
-                 {
-                     client.DefaultRequestHeaders.Accept.Clear();
-                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                     client.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
-                 }
-                );
                 services.AddSingleton<IApiClient, ApiClient>();
-                services.AddSingleton<ApiOptions>();
 
+                //Options
                 services.AddOptions<OrchestratorOptions>()
                         .Bind(context.Configuration.GetSection("OrchestratorOptions"));
 
+                services.AddOptions<ApiOptions>()
+                        .Bind(context.Configuration.GetSection("ApiOptions"));
+                //Http client
+                services.AddHttpClient("TrelloApi", client =>
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("User-Agent", "Concordia Trello Client");
+                }
+                );
+                //Db
                 services.AddDbContextFactory<ConcordiaDbContext>(
                     options =>
                     options.UseSqlServer(context.Configuration.GetSection("OrchestratorOptions")["DefaultDatabase"])
