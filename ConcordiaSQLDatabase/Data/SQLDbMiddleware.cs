@@ -63,6 +63,11 @@ public class SQLDbMiddleware : IDbMiddleware
         return (completed, total);
     }
 
+    public async Task<List<Report>> GetPerformanceReport()
+    {
+        return await _context.PerformanceReport.ToListAsync();
+    }
+
     public async Task PostComment(Comment comment)
     {
         var oldComments = await _context.Comments

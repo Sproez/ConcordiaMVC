@@ -19,22 +19,24 @@ public class PdfGenerator
     public async Task Test()
     {
         var outerDiv = new HtmlTag("div");
-        outerDiv.AppendText("Inizio lista");
 
-        //Loop all scientists and add their report
-        var scientists = await _dbMiddleware.GetAllPeople();
-        foreach(Person p in scientists)
+        var title = new HtmlTag("h1").AppendText("Performance Report");
+        outerDiv.Append(title);
+
+        //Add a list element for each scientist
+        var list = new HtmlTag("ul");
+        var reports = await _dbMiddleware.GetPerformanceReport();
+        foreach (Report r in reports)
         {
-            (int completed, int total) = await _dbMiddleware.GetScientistPerformanceReport(p.Id, _completedListId);
+            var listElement = new HtmlTag("li");
+            listElement.AppendText($"{r.Name} ha completato {r.PercentCompleted} dei suoi assegnamenti");
+            //Fancy bar
+            var bar = new HtmlTag("progress").Value(r.completedTasks.ToString()).Attr("max", r.assignedTasks.ToString());
+            listElement.Append(new HtmlTag("br")).Append(bar);
 
-            var listElement = new HtmlTag("div");
-            listElement.AppendText($"Scienziato {p.Name} ha completato {completed} assegnamenti su {total}");
-            outerDiv.Append(listElement);
+            list.Append(listElement);
         }
-
-        var closingDiv = new HtmlTag("div");
-        closingDiv.AppendText("Fine lista");
-        outerDiv.Append(closingDiv);
+        outerDiv.Append(list);
 
         HtmlToPdf HtmlToPdf = new IronPdf.HtmlToPdf();
         HtmlToPdf.RenderHtmlAsPdf(outerDiv.ToString()).SaveAs(@"Report.Pdf");

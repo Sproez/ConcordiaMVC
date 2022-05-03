@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="Abstract\ITrelloClient.cs" />
+    <Compile Remove="Domain\PerformanceReport.cs" />
   </ItemGroup>
 
   <ItemGroup>

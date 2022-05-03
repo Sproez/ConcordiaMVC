@@ -11,6 +11,9 @@ public class ConcordiaDbContext : DbContext
     public DbSet<Comment> Comments { get; set; } = null!;
     public DbSet<Assignment> Assignments { get; set; } = null!;
 
+    //View
+    public DbSet<Report> PerformanceReport { get; set; } = null!;
+
     public ConcordiaDbContext(DbContextOptions<ConcordiaDbContext> options) : base(options)
     {
     }
@@ -21,5 +24,7 @@ public class ConcordiaDbContext : DbContext
         modelBuilder.Entity<Assignment>()
         .HasKey(a => new { a.CardId, a.PersonId });
 
+        //Ignore the view for migrations
+        modelBuilder.Entity<Report>().ToTable("PerformanceReport", t => t.ExcludeFromMigrations());
     }
 }
