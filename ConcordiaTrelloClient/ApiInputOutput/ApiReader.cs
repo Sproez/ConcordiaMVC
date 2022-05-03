@@ -27,8 +27,6 @@ public class ApiReader
         var apiCommentsQuery = $"{_client.BoardEndpoint}/actions?filter=commentCard&fields=id,data,date,idMemberCreator&{_client.options.ApiAuth}";
         var apiAssignmentsQuery = $"{_client.BoardEndpoint}/cards?fields=id,idMembers&{_client.options.ApiAuth}";
 
-        //Commented for testing
-
         var listTask = GetThingsAsync<CardList, CardListDto>(apiListsQuery);
         var cardTask = GetThingsAsync<Card, CardDto>(apiCardsQuery);
         var personTask = GetThingsAsync<Person, PersonDto>(apiPeopleQuery);
@@ -42,17 +40,6 @@ public class ApiReader
         await t;
 
         return new DatabaseImage(cardTask.Result, personTask.Result, commentTask.Result, assignmentTask.Result, listTask.Result);
-
-        /*
-        //Testing code
-        var listR = await GetThingsAsync<CardList, CardListDto>(apiListsQuery);
-        var cardR = await GetThingsAsync<Card, CardDto>(apiCardsQuery);
-        var personR = await GetThingsAsync<Person, PersonDto>(apiPeopleQuery);
-        var commentR = await GetThingsAsync<Comment, CommentDto>(apiCommentsQuery);
-        var assignmentR = await GetAssignmentsAsync(apiAssignmentsQuery);
-
-        return new DatabaseImage(cardR, personR, commentR, assignmentR, listR);
-        */
     }
 
     #region Get methods

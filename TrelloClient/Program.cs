@@ -37,6 +37,8 @@ builder.ConfigureServices((context, services) =>
                     options =>
                     options.UseSqlServer(context.Configuration.GetSection("OrchestratorOptions")["DefaultDatabase"])
                 );
+                //Logging
+                services.AddLogging();
             }
        );
 
@@ -45,8 +47,6 @@ var scheduler = host.Services.GetRequiredService<IScheduler>();
 
 //Test run
 await scheduler.TestRun();
-Console.WriteLine("Sync done");
 
 //Scheduled run every 30 seconds
 //await scheduler.ScheduleAndRun(DateTime.Now, new TimeSpan(0, 0, 30), new TimeSpan(0, 0, 10));
-//Console.WriteLine("This line will never be reached");

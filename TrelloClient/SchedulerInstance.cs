@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConcordiaLib.Abstract;
+﻿using ConcordiaLib.Abstract;
 using ConcordiaOrchestrator;
+using Microsoft.Extensions.Logging;
 
 namespace Scheduler;
 
 public class SchedulerInstance : IScheduler
 {
     private readonly Orchestrator _orchestrator;
+    private readonly ILogger<SchedulerInstance> _logger;
 
     public DateTime StartingDate { get; private set; }
     public TimeSpan Interval { get; private set; }
@@ -18,14 +15,16 @@ public class SchedulerInstance : IScheduler
 
     public DateTime NextExecution { get; private set; }
 
-    public SchedulerInstance(Orchestrator o)
+    public SchedulerInstance(Orchestrator o, ILogger<SchedulerInstance> logger)
     {
         _orchestrator = o;
+        _logger = logger;
     }
 
     public async Task TestRun()
     {
         await _orchestrator.Sync();
+        _logger.LogInformation("Sync done!");
     }
 
     public async Task ScheduleAndRun(DateTime start, TimeSpan i, TimeSpan window)
@@ -46,7 +45,7 @@ public class SchedulerInstance : IScheduler
         //If we missed the time window find the next one
         while (NextExecution + TimeWindow < DateTime.Now)
         {
-            Console.WriteLine($"Missed sync at {NextExecution}, retrying at {NextExecution + Interval}");
+            _logger.LogWarning($"Missed sync at {NextExecution}, retrying at {NextExecution + Interval}");
             NextExecution += Interval;
         }
         //Wait
@@ -60,17 +59,15 @@ public class SchedulerInstance : IScheduler
 
     private async Task TrySync()
     {
-        Console.WriteLine($"Starting sync at {DateTime.Now}");
+        _logger.LogInformation($"Starting sync at {DateTime.Now}");
         try
         {
             await _orchestrator.Sync();
-            Console.WriteLine($"Sync succeded at {DateTime.Now}");
+            _logger.LogInformation($"Sync succeded at {DateTime.Now}");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Sync failed at {DateTime.Now}");
-            Console.WriteLine($"Exception:");
-            Console.WriteLine(e);
+            _logger.LogError(e, $"Sync failed at {DateTime.Now} with exception: ");
         }
     }
 }

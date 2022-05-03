@@ -1,5 +1,6 @@
 ﻿using ConcordiaLib.Collections;
 using ConcordiaLib.Domain;
+using Microsoft.Extensions.Logging;
 
 namespace ConcordiaTrelloClient.ApiInputOutput;
 
@@ -28,23 +29,25 @@ public class ApiWriter
     private async Task PutCardListsAsync(MergeCUD<CardList> data)
     {
         //Should never happen
-        throw new Exception(data.ToString());
+        _client.logger.LogError($"Invalid data: {data}");
+        throw new InvalidOperationException("Merge error: changes to card lists on remote");
     }
 
     private async Task PutPeopleAsync(MergeCUD<Person> data)
     {
         //Should never happen
-        throw new Exception(data.ToString());
+        _client.logger.LogError($"Invalid data: {data}");
+        throw new InvalidOperationException("Merge error: changes to people on remote");
     }
 
     private async Task PutCardsAsync(MergeCUD<Card> data)
     {
         //Create
-        foreach (var c in data.Created)
+        if (data.Created.Any())
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            //Should never happen
+            _client.logger.LogError($"Invalid data: {data.Created}");
+            throw new InvalidOperationException($"Merge error: attempted to create card on remote");
         }
         //Update
         foreach (var c in data.Updated)
@@ -58,11 +61,11 @@ public class ApiWriter
             }
         }
         //Delete
-        foreach (var c in data.Deleted)
+        if (data.Deleted.Any())
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            //Should never happen
+            _client.logger.LogError($"Invalid data: {data.Deleted}");
+            throw new InvalidOperationException($"Merge error: attempted to delete card on remote");
         }
     }
 
@@ -75,16 +78,15 @@ public class ApiWriter
             var response = await _httpClient.PostAsync(apiCreateQuery, null);
             if (!response.IsSuccessStatusCode)
             {
-                //TODO log
-                var test = response.StatusCode;
+                _client.logger.LogWarning($"Comment creation failed on remote for commentId {c.Id} with status code {response.StatusCode}");
             }
         }
         //Update
-        foreach (var c in data.Updated)
+        if (data.Updated.Any())
         {
-            //Should not happen
-            //TODO log
-            Console.WriteLine("WARNING: " + c);
+            //Should never happen
+            _client.logger.LogError($"Invalid data: {data.Updated}");
+            throw new InvalidOperationException($"Merge error: attempted to update comment on remote");
         }
         //Delete
         foreach (var c in data.Deleted)
@@ -93,8 +95,7 @@ public class ApiWriter
             var response = await _httpClient.DeleteAsync(apiDeleteQuery);
             if (!response.IsSuccessStatusCode)
             {
-                //TODO log
-                var test = response.StatusCode;
+                _client.logger.LogWarning($"Comment deletion failed on remote for commentId {c.Id} with status code {response.StatusCode}");
             }
         }
     }
@@ -102,7 +103,8 @@ public class ApiWriter
     private async Task PutAssignmentsAsync(MergeCUD<Assignment> data)
     {
         //Should never happen
-        throw new Exception(data.ToString());
+        _client.logger.LogError($"Invalid data: {data}");
+        throw new InvalidOperationException($"Merge error: changes to assignments on remote");
     }
 #pragma warning restore CS1998
     #endregion

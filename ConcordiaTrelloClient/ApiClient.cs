@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ConcordiaTrelloClient;
 
@@ -16,6 +17,7 @@ using Options;
 public class ApiClient : IApiClient
 {
     public readonly IHttpClientFactory httpClientFactory;
+    public readonly ILogger<ApiClient> logger;
 
     public readonly ApiOptions options;
     public readonly IMapper mapper;
@@ -25,7 +27,7 @@ public class ApiClient : IApiClient
     private readonly ApiReader _reader;
     private readonly ApiWriter _writer;
 
-    public ApiClient(IHttpClientFactory factory, IOptions<ApiOptions> options)
+    public ApiClient(IHttpClientFactory factory, IOptions<ApiOptions> options, ILogger<ApiClient> l)
     {
         //Options config
         this.options = options.Value;
@@ -49,6 +51,9 @@ public class ApiClient : IApiClient
 
         //HTTP client factory setup
         httpClientFactory = factory;
+
+        //Logger setup
+        logger = l;
 
         //Reader and writer setup
         _reader = new ApiReader(this);
